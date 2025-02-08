@@ -91,16 +91,17 @@ function mostrarDatos(data) {
             });
         },
         onEachFeature: function (feature, layer) {
-            var popupContent = `<b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
-                                <b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
-                                <b>Institución:</b> ${feature.properties.Institución || "No disponible"}<br>
-                                <b>Tipo de Unidad:</b> ${feature.properties.Tipo || "No especificado"}<br>
-                                <b>Servicios:</b> ${feature.properties.Servicios || "No especificado"}<br>
-                                <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`;
+    var popupContent = `<b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
+                        <b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
+                        <b>Institución:</b> ${feature.properties["Institución"] || "No disponible"}<br>
+                        <b>Tipo de Unidad:</b> ${feature.properties.Tipo || "No especificado"}<br>
+                        <b>Servicios:</b> ${feature.properties.Servicios || "No especificado"}<br>
+                        <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
+                        <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`;
 
-            layer.bindPopup(popupContent);
-        }
+    layer.bindPopup(popupContent);
+}
+
     }).addTo(map);
 }
 
