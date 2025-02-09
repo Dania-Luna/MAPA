@@ -5,80 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Interactivo</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <style>
-        #map {
-            height: 600px;
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Mapa de Centros de Atención</h1>
+    
+    <!-- Controles de filtros -->
+    <div id="filtros">
+        <label for="estado">Filtrar por Estado:</label>
+        <select id="estado">
+            <option value="todos">Todos</option>
+        </select>
+
+        <label for="tipo">Filtrar por Tipo de Unidad:</label>
+        <select id="tipo">
+            <option value="todos">Todos</option>
+        </select>
+
+        <button onclick="filtrarDatos()">Aplicar Filtros</button>
+    </div>
+    
     <div id="map"></div>
     
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map').setView([23.6345, -102.5528], 5);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        var colors = {
-            "CDM": "red",
-            "CJM": "green",
-            "CEM": "purple",
-            "CEB": "pink",
-            "CEAV": "darkblue",
-            "ULA/FIJA": "blue",
-            "ULA/MÓVIL": "yellow",
-            "ULA/Itinerante": "brown",
-            "ULA/TEL": "gray",
-            "CAMVIF": "lightblue",
-            "IMMT": "darkred",
-            "CAVIZ": "orange",
-            "CEA": "purple",
-            "IMM": "pink",
-            "Punto Violeta": "violet",
-            "Refugio": "black",
-            "LÍNEA TELEFÓNICA": "gray",
-            "CJMF": "black",
-            "DIG": "blue",
-            "IMEF": "teal",
-            "Otro": "darkgray"
-        };
-
-        fetch('CENTROS_DE_ATENCION.geojson')
-            .then(response => response.json())
-            .then(data => {
-                L.geoJSON(data, {
-                    pointToLayer: function (feature, latlng) {
-                        var tipo = feature.properties.Tipo ? feature.properties.Tipo.trim() : "Otro";
-                        var color = colors[tipo] || colors["Otro"];
-                        return L.circleMarker(latlng, {
-                            radius: 6,
-                            fillColor: color,
-                            color: "#000",
-                            weight: 1,
-                            opacity: 1,
-                            fillOpacity: 0.8
-                        });
-                    },
-                    onEachFeature: function (feature, layer) {
-                        console.log(feature.properties);  // Para depuración en consola
-
-                        var popupContent = `<b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
-                                            <b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
-                                            <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
-                                            <b>Tipo de Unidad:</b> ${feature.properties.Tipo || "No especificado"}<br>
-                                            <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
-                                            <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                                            <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`;
-
-                        layer.bindPopup(popupContent);
-                    }
-                }).addTo(map);
-            })
-            .catch(error => console.error('Error cargando el archivo GeoJSON:', error));
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
