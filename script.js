@@ -35,10 +35,10 @@ var colors = {
 };
 
 // Cargar el archivo GeoJSON y llenar los filtros
-fetch('CENTROS_ATENCION.geojson')
+fetch('CENTROS_DE_ATENCION.geojson')
     .then(response => response.json())
     .then(data => {
-        geojsonData = data; // Guardamos los datos originales
+        geojsonData = data;  // Guardamos los datos originales
 
         // Obtener lista única de estados y tipos de unidad
         let estados = new Set();
@@ -91,10 +91,10 @@ function mostrarDatos(data) {
             });
         },
         onEachFeature: function (feature, layer) {
-            var popupContent = `<b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
-                                <b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
-                                <b>Institución:</b> ${feature.properties["Institución"] || "No disponible"}<br>
+            var popupContent = `<b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
+                                <b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
                                 <b>Tipo de Unidad:</b> ${feature.properties.Tipo || "No especificado"}<br>
+                                <b>Dirección:</b> ${feature.properties.Direccion || "No disponible"}<br>
                                 <b>Servicios:</b> ${feature.properties.Servicios || "No especificado"}<br>
                                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
                                 <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`;
@@ -120,3 +120,4 @@ function filtrarDatos() {
 
     mostrarDatos(datosFiltrados);
 }
+
