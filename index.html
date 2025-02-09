@@ -51,7 +51,8 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        fetch('CENTROS_DE_ATENCION.geojson')
+        fetch('https://dania-luna.github.io/Mapa/CENTROS_DE_ATENCION.geojson')
+
             .then(response => response.json())
             .then(data => {
                 datosOriginales = data.features;
