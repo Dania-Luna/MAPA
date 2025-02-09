@@ -1,10 +1,22 @@
-// Crear el mapa y centrarlo en México
-var map = L.map('map').setView([23.6345, -102.5528], 5);
+document.addEventListener("DOMContentLoaded", function () {
+    var mapContainer = document.getElementById('map');
 
-// Agregar mapa base de OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+    if (!mapContainer) {
+        console.error("Error: No se encontró el contenedor del mapa.");
+        return;
+    }
+
+    // Crear el mapa solo si el contenedor existe
+    var map = L.map('map').setView([23.6345, -102.5528], 5);
+
+    // Agregar mapa base de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    console.log("✅ Mapa inicializado correctamente.");
+});
+
 
 var markersLayer = L.layerGroup().addTo(map);
 var datosOriginales = [];
