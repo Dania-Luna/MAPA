@@ -81,7 +81,7 @@ function cargarDatosMapa(datos) {
                 weight: 1,
                 opacity: 1,
                 fillOpacity: 0.8
-            }).bindPopup(
+            })marker.bindPopup(
                 `<b>Estado:</b> ${feature.properties.Estado}<br>
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
                 <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
@@ -91,6 +91,7 @@ function cargarDatosMapa(datos) {
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
                 <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
             );
+            return marker;
         }
     });
     capaGeoJSON.addLayer(geojsonLayer);
