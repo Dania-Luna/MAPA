@@ -6,6 +6,14 @@
     <title>Mapa Interactivo</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
+    <style>
+        @media screen and (max-width: 768px) {
+            #map {
+                width: 100%;
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Mapa de Centros de Atención</h1>
@@ -37,25 +45,24 @@
 
         var map = L.map('map').setView([23.6345, -102.5528], 5);
         var markersLayer = L.layerGroup().addTo(map);
-        var estadoLayer = L.layerGroup().addTo(map);
+        var datosOriginales = [];
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        var geojsonData;
         fetch('CENTROS_DE_ATENCION_LIMPIO.geojson')
             .then(response => response.json())
             .then(data => {
-                geojsonData = data;
+                datosOriginales = data.features;
                 llenarFiltros(data);
-                cargarDatos(data);
+                cargarDatos(datosOriginales);
             })
             .catch(error => console.error('Error cargando el archivo GeoJSON:', error));
 
         function cargarDatos(data) {
             markersLayer.clearLayers();
-            L.geoJSON(data, {
+            L.geoJSON({ type: "FeatureCollection", features: data }, {
                 pointToLayer: function (feature, latlng) {
                     return L.circleMarker(latlng, {
                         radius: 6,
@@ -119,16 +126,15 @@
             let estadoSeleccionado = normalizarTexto(document.getElementById("estado").value);
             let tipoSeleccionado = document.getElementById("tipo").value.trim();
             
-            let datosFiltrados = {
-                type: "FeatureCollection",
-                features: geojsonData.features.filter(feature => {
-                    let estado = normalizarTexto(feature.properties["Estado"]);
-                    let tipo = feature.properties["Tipo"]?.trim() || "";
-                    let cumpleEstado = estadoSeleccionado === "todos" || estado === estadoSeleccionado;
-                    let cumpleTipo = tipoSeleccionado === "todos" || tipo === tipoSeleccionado;
-                    return cumpleEstado && cumpleTipo;
-                })
-            };
+            let datosFiltrados = datosOriginales.filter(feature => {
+                let estado = normalizarTexto(feature.properties["Estado"]);
+                let tipo = feature.properties["Tipo"]?.trim() || "";
+                let cumpleEstado = estadoSeleccionado === "todos" || estado === estadoSeleccionado;
+                let cumpleTipo = tipoSeleccionado === "todos" || tipo === tipoSeleccionado;
+                return cumpleEstado && cumpleTipo;
+            });
+            
+            console.log("Total de puntos después del filtrado:", datosFiltrados.length);
             cargarDatos(datosFiltrados);
         }
     </script>
