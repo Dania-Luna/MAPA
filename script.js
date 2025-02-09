@@ -69,32 +69,38 @@ function poblarFiltros(datos) {
     });
 }
 
-// Función para cargar los datos en el mapa
 function cargarDatosMapa(datos) {
     capaGeoJSON.clearLayers();
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {
+            let marker = L.circleMarker(latlng, {  // Aquí se define 'marker'
                 radius: 6,
                 fillColor: getColorByTipo(feature.properties.Tipo),
                 color: "#000",
                 weight: 1,
                 opacity: 1,
                 fillOpacity: 0.8
-            })marker.bindPopup(
+            });
+
+            // Agregar el popup con la información
+            marker.bindPopup(
                 `<b>Estado:</b> ${feature.properties.Estado}<br>
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
                 <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
-                <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
+                <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
                 <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
             );
-            return marker;
+
+            return marker;  // Se debe retornar el marcador para que aparezca en el mapa
         }
     });
+
     capaGeoJSON.addLayer(geojsonLayer);
+}
+
 }
 
 // Función para aplicar filtros a los puntos del mapa
