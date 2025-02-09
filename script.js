@@ -99,7 +99,6 @@ function cargarDatosMapa(datos) {
     });
 
     capaGeoJSON.addLayer(geojsonLayer);
-}
 
 }
 
