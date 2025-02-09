@@ -45,7 +45,7 @@ function limpiarDatos(datos) {
     return datos;
 }
 
-// Función para poblar los filtros de estados y tipos de unidad
+// Función para poblar los filtros de estados y tipos de unidad, ordenando los estados alfabéticamente
 function poblarFiltros(datos) {
     let estados = new Set();
     let tipos = new Set();
@@ -58,8 +58,11 @@ function poblarFiltros(datos) {
     let filtroEstado = document.getElementById("filtroEstado");
     let filtroTipo = document.getElementById("filtroTipo");
 
+    // 🔥 Ordenar los estados alfabéticamente antes de agregarlos al filtro
+    let estadosOrdenados = [...estados].sort();
+
     filtroEstado.innerHTML = `<option value="Todos">Todos</option>`;
-    estados.forEach(estado => {
+    estadosOrdenados.forEach(estado => {
         filtroEstado.innerHTML += `<option value="${estado}">${estado}</option>`;
     });
 
@@ -92,7 +95,7 @@ function cargarDatosMapa(datos) {
                 <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
+                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}` 
             );
 
             return marker;
@@ -125,11 +128,11 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     .then(response => response.json())
     .then(data => {
         capaEstados = L.geoJSON(data, {
-            style: feature => ({
-                color: "transparent",  // Inicialmente invisible
+            style: {
+                color: "transparent",
                 weight: 1,
                 fillOpacity: 0
-            })
+            }
         });
         console.log("Capa de estados cargada.");
     })
