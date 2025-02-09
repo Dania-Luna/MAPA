@@ -125,11 +125,11 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     .then(response => response.json())
     .then(data => {
         capaEstados = L.geoJSON(data, {
-            style: {
+            style: feature => ({
                 color: "transparent",  // Inicialmente invisible
                 weight: 1,
                 fillOpacity: 0
-            }
+            })
         });
         console.log("Capa de estados cargada.");
     })
