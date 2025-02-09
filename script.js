@@ -6,11 +6,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Capa de datos de centros de atención
+// Capas del mapa
 var capaGeoJSON = L.layerGroup().addTo(map);
 var datosGeoJSON = null;
-var capaEstados = null;  // Capa con todos los estados
-var capaEstadoSeleccionado = null; // Capa para el estado resaltado
+var capaEstados = null;  
+var capaEstadoSeleccionado = null;
 
 // Función para asignar colores por tipo de unidad
 function getColorByTipo(tipo) {
@@ -28,7 +28,7 @@ function getColorByTipo(tipo) {
     return colores[tipo] || "gray";
 }
 
-// Cargar datos de centros de atención desde GeoJSON
+// Cargar datos de centros de atención
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
     .then(response => response.json())
     .then(data => {
@@ -69,11 +69,12 @@ function poblarFiltros(datos) {
     });
 }
 
+// Función para cargar los puntos en el mapa con popups
 function cargarDatosMapa(datos) {
     capaGeoJSON.clearLayers();
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
-            let marker = L.circleMarker(latlng, {  // Aquí se define 'marker'
+            let marker = L.circleMarker(latlng, {
                 radius: 6,
                 fillColor: getColorByTipo(feature.properties.Tipo),
                 color: "#000",
@@ -82,7 +83,6 @@ function cargarDatosMapa(datos) {
                 fillOpacity: 0.8
             });
 
-            // Agregar el popup con la información
             marker.bindPopup(
                 `<b>Estado:</b> ${feature.properties.Estado}<br>
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
@@ -94,15 +94,14 @@ function cargarDatosMapa(datos) {
                 <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
             );
 
-            return marker;  // Se debe retornar el marcador para que aparezca en el mapa
+            return marker;
         }
     });
 
     capaGeoJSON.addLayer(geojsonLayer);
-
 }
 
-// Función para aplicar filtros a los puntos del mapa
+// Función para aplicar filtros y mantener popups
 function aplicarFiltros() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
     let tipoSeleccionado = document.getElementById("filtroTipo").value;
@@ -118,15 +117,17 @@ function aplicarFiltros() {
 
     capaGeoJSON.clearLayers();
     cargarDatosMapa(datosFiltrados);
+
+    console.log("Filtros aplicados correctamente.");
 }
 
-// Cargar la capa de estados en el mapa
+// Cargar la capa de estados sin mostrarla al inicio
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     .then(response => response.json())
     .then(data => {
         capaEstados = L.geoJSON(data, {
             style: {
-                color: "transparent",  // Inicialmente sin color para ocultar los estados
+                color: "transparent",  // Inicialmente invisible
                 weight: 1,
                 fillOpacity: 0
             }
@@ -139,9 +140,8 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
-    // Si se selecciona "Todos", quitar el resaltado y resetear el mapa
     if (estadoSeleccionado === "Todos") {
-        map.setView([23.6345, -102.5528], 5); // Zoom a nivel nacional
+        map.setView([23.6345, -102.5528], 5);
         if (capaEstadoSeleccionado) {
             map.removeLayer(capaEstadoSeleccionado);
             capaEstadoSeleccionado = null;
@@ -149,38 +149,34 @@ function resaltarEstado() {
         return;
     }
 
-    // Si ya hay un estado resaltado, quitarlo antes de agregar el nuevo
     if (capaEstadoSeleccionado) {
         map.removeLayer(capaEstadoSeleccionado);
     }
 
-    // Buscar el estado seleccionado en la capa de estados
     let estadoEncontrado = {
         type: "FeatureCollection",
-        features: capaEstados.toGeoJSON().features.filter(feature => 
+        features: capaEstados.toGeoJSON().features.filter(feature =>
             feature.properties.ESTADO === estadoSeleccionado)
     };
 
     if (estadoEncontrado.features.length === 0) {
-        console.warn("No se encontró el estado seleccionado en la capa de estados.");
+        console.warn("No se encontró el estado seleccionado.");
         return;
     }
 
-    // Agregar solo el estado seleccionado con color naranja
     capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
         style: {
-            color: "#ff7800", // Color de resaltado
+            color: "#ff7800",
             weight: 3,
             fillOpacity: 0
         }
     }).addTo(map);
 
-    // Hacer zoom al estado seleccionado
     map.fitBounds(capaEstadoSeleccionado.getBounds());
 }
 
-// Asignar la función al botón de filtros
+// Asignar la función al botón de filtros y reactivar popups
 document.getElementById("botonFiltrar").addEventListener("click", () => {
-    aplicarFiltros();   
-    setTimeout(resaltarEstado, 500);  
+    aplicarFiltros();
+    setTimeout(resaltarEstado, 500);
 });
