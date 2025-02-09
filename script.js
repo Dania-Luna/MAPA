@@ -9,7 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Capas del mapa
 var capaGeoJSON = L.layerGroup().addTo(map);
 var datosGeoJSON = null;
-var capaEstados = null;  
+var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
 // Función para asignar colores por tipo de unidad
@@ -71,7 +71,8 @@ function poblarFiltros(datos) {
 
 // Función para cargar los puntos en el mapa con popups
 function cargarDatosMapa(datos) {
-    capaGeoJSON.clearLayers();
+    capaGeoJSON.clearLayers(); // Limpiar los datos previos
+
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
             let marker = L.circleMarker(latlng, {
@@ -117,8 +118,6 @@ function aplicarFiltros() {
 
     capaGeoJSON.clearLayers();
     cargarDatosMapa(datosFiltrados);
-
-    console.log("Filtros aplicados correctamente.");
 }
 
 // Cargar la capa de estados sin mostrarla al inicio
