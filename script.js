@@ -6,8 +6,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-var mapaDatos;
-var geojsonData;
+var markersLayer = L.layerGroup().addTo(map);
+var datosOriginales = [];
 
 // Definir colores para cada tipo de unidad
 var colors = {
@@ -34,49 +34,56 @@ var colors = {
     "Otro": "darkgray"
 };
 
-// Cargar el archivo GeoJSON y llenar los filtros
-fetch('CENTROS_DE_ATENCION.geojson')
+// Normalizar texto para evitar errores en los filtros
+function normalizarTexto(texto) {
+    return texto
+        ? texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim()
+        : "";
+}
+
+// Cargar el archivo GeoJSON correctamente
+fetch('https://dania-luna.github.io/MAPA/CENTROS_DE_ATENCION.geojson')
     .then(response => response.json())
     .then(data => {
-        geojsonData = data;  // Guardamos los datos originales
-
-        // Obtener lista única de estados y tipos de unidad
-        let estados = new Set();
-        let tipos = new Set();
-
-        data.features.forEach(feature => {
-            if (feature.properties.Estado) estados.add(feature.properties.Estado);
-            if (feature.properties.Tipo) tipos.add(feature.properties.Tipo);
-        });
-
-        // Llenar los selects con opciones únicas
-        let estadoSelect = document.getElementById("estado");
-        let tipoSelect = document.getElementById("tipo");
-
-        estados.forEach(estado => {
-            let option = document.createElement("option");
-            option.value = estado;
-            option.textContent = estado;
-            estadoSelect.appendChild(option);
-        });
-
-        tipos.forEach(tipo => {
-            let option = document.createElement("option");
-            option.value = tipo;
-            option.textContent = tipo;
-            tipoSelect.appendChild(option);
-        });
-
-        // Mostrar todos los puntos al cargar la página
-        mostrarDatos(data);
+        datosOriginales = data.features;
+        llenarFiltros(datosOriginales);
+        cargarDatos(datosOriginales);
     })
-    .catch(error => console.error("Error cargando GeoJSON:", error));
+    .catch(error => console.error("Error cargando el archivo GeoJSON:", error));
 
-// Función para mostrar los datos en el mapa
-function mostrarDatos(data) {
-    if (mapaDatos) mapaDatos.clearLayers();
+// Función para llenar los filtros de Estado y Tipo de Unidad
+function llenarFiltros(data) {
+    let estados = new Set();
+    let tipos = new Set();
 
-    mapaDatos = L.geoJSON(data, {
+    data.forEach(feature => {
+        if (feature.properties.Estado) estados.add(normalizarTexto(feature.properties.Estado));
+        if (feature.properties.Tipo) tipos.add(feature.properties.Tipo.trim());
+    });
+
+    let estadoSelect = document.getElementById("estado");
+    let tipoSelect = document.getElementById("tipo");
+
+    estados.forEach(estado => {
+        let option = document.createElement("option");
+        option.value = estado;
+        option.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
+        estadoSelect.appendChild(option);
+    });
+
+    tipos.forEach(tipo => {
+        let option = document.createElement("option");
+        option.value = tipo;
+        option.textContent = tipo;
+        tipoSelect.appendChild(option);
+    });
+}
+
+// Función para cargar los datos en el mapa
+function cargarDatos(data) {
+    markersLayer.clearLayers();
+
+    L.geoJSON({ type: "FeatureCollection", features: data }, {
         pointToLayer: function (feature, latlng) {
             var tipo = feature.properties.Tipo ? feature.properties.Tipo.trim() : "Otro";
             var color = colors[tipo] || colors["Otro"];
@@ -91,33 +98,43 @@ function mostrarDatos(data) {
             });
         },
         onEachFeature: function (feature, layer) {
-            var popupContent = `<b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
-                                <b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
-                                <b>Tipo de Unidad:</b> ${feature.properties.Tipo || "No especificado"}<br>
-                                <b>Dirección:</b> ${feature.properties.Direccion || "No disponible"}<br>
-                                <b>Servicios:</b> ${feature.properties.Servicios || "No especificado"}<br>
-                                <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`;
-
+            var estado = normalizarTexto(feature.properties["Estado"]);
+            var municipio = feature.properties["Municipio"]?.trim() || "No disponible";
+            var institucion = feature.properties["Nombre de la institución"]?.trim() || "No disponible";
+            var direccion = feature.properties["Dirección"]?.trim() || "No disponible";
+            var tipo = feature.properties["Tipo"]?.trim() || "No especificado";
+            var horarios = feature.properties["Horarios"]?.trim() || "No disponible";
+            var telefono = feature.properties["Teléfono"]?.trim() || "No disponible";
+            
+            var popupContent = `<b>Estado:</b> ${feature.properties["Estado"]}<br>
+                                <b>Municipio:</b> ${municipio}<br>
+                                <b>Nombre de la institución:</b> ${institucion}<br>
+                                <b>Dirección:</b> ${direccion}<br>
+                                <b>Tipo de Unidad:</b> ${tipo}<br>
+                                <b>Horarios:</b> ${horarios}<br>
+                                <b>Teléfono:</b> ${telefono}`;
+            
             layer.bindPopup(popupContent);
+            markersLayer.addLayer(layer);
         }
-    }).addTo(map);
+    });
 }
 
-// Función para filtrar los datos
+// Función para filtrar los datos y actualizar el mapa
 function filtrarDatos() {
-    let estadoSeleccionado = document.getElementById("estado").value;
-    let tipoSeleccionado = document.getElementById("tipo").value;
+    let estadoSeleccionado = normalizarTexto(document.getElementById("estado").value);
+    let tipoSeleccionado = document.getElementById("tipo").value.trim();
 
-    let datosFiltrados = {
-        type: "FeatureCollection",
-        features: geojsonData.features.filter(feature => {
-            let cumpleEstado = estadoSeleccionado === "todos" || feature.properties.Estado === estadoSeleccionado;
-            let cumpleTipo = tipoSeleccionado === "todos" || feature.properties.Tipo === tipoSeleccionado;
-            return cumpleEstado && cumpleTipo;
-        })
-    };
+    let datosFiltrados = datosOriginales.filter(feature => {
+        let estado = normalizarTexto(feature.properties["Estado"]);
+        let tipo = feature.properties["Tipo"]?.trim() || "";
+        let cumpleEstado = estadoSeleccionado === "todos" || estado === estadoSeleccionado;
+        let cumpleTipo = tipoSeleccionado === "todos" || tipo === tipoSeleccionado;
+        return cumpleEstado && cumpleTipo;
+    });
 
-    mostrarDatos(datosFiltrados);
+    console.log("Total de puntos después del filtrado:", datosFiltrados.length);
+    cargarDatos(datosFiltrados);
 }
+
 
