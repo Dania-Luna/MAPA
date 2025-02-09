@@ -113,3 +113,50 @@ function aplicarFiltros() {
     capaGeoJSON.clearLayers();
     cargarDatosMapa(datosFiltrados);
 }
+// Variable para la capa de estados
+let capaEstados;
+
+// Cargar la capa de estados en el mapa
+fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
+    .then(response => response.json())
+    .then(data => {
+        capaEstados = L.geoJSON(data, {
+            style: feature => ({
+                color: "#555555",  // Color del contorno
+                weight: 2,
+                fillOpacity: 0   // Sin relleno
+            })
+        }).addTo(map);
+    })
+    .catch(error => console.error("Error cargando GeoJSON de estados:", error));
+
+// Función para resaltar un estado y hacer zoom
+function resaltarEstado() {
+    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+
+    // Limpiar estilos previos
+    capaEstados.resetStyle();
+
+    // Si se selecciona "Todos", mostrar todos los estados
+    if (estadoSeleccionado === "Todos") {
+        map.setView([23.6345, -102.5528], 5); // Zoom a nivel nacional
+        return;
+    }
+
+    // Buscar el estado seleccionado y cambiar su estilo
+    capaEstados.eachLayer(layer => {
+        if (layer.feature.properties.NOMBRE === estadoSeleccionado) {
+            layer.setStyle({
+                color: "#ff7800", // Color de resaltado
+                weight: 4,
+                fillOpacity: 0
+            });
+
+            // Hacer zoom al estado seleccionado
+            map.fitBounds(layer.getBounds());
+        }
+    });
+}
+
+// Asignar la función al botón de filtros
+document.getElementById("botonFiltrar").addEventListener("click", resaltarEstado);
