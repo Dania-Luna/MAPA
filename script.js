@@ -27,11 +27,11 @@ function getColorByTipo(tipo) {
 
 // Cargar datos desde el archivo GeoJSON en GitHub Pages
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
-    .then(response => response.json())
+    .then(response => response.json())  // Convertir la respuesta a JSON
     .then(data => {
-        datosGeoJSON = data;
-        cargarDatosMapa(data);
-        llenarFiltros(data);
+        console.log("GeoJSON cargado correctamente", data); // Agrega esta línea
+        datosGeoJSON = data;  // Guardamos los datos en la variable global
+        cargarDatosMapa(data); // Llamamos a la función para mostrar los datos
     })
     .catch(error => console.error("Error cargando GeoJSON:", error));
 
