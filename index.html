@@ -12,14 +12,22 @@
     <h1>Mapa de Centros de Atención</h1>
     <div class="filters">
         <label for="estado">Filtrar por Estado:</label>
-        <select id="estado">
-            <option value="todos">Todos</option>
-        </select>
+        <select id="filtroEstado">
+    <option value="Todos">Todos</option>
+    <option value="Chiapas">Chiapas</option>
+    <option value="Estado de México">Estado de México</option>
+</select>
 
-        <label for="tipo">Filtrar por Tipo de Unidad:</label>
-        <select id="tipo">
-            <option value="todos">Todos</option>
-        </select>
+<select id="filtroTipo">
+    <option value="Todos">Todos</option>
+    <option value="CDM">CDM</option>
+    <option value="ULA/FIJA">ULA/FIJA</option>
+    <option value="CJM">CJM</option>
+    <option value="Municipal">Municipal</option>
+</select>
+
+<button id="botonFiltrar">Aplicar Filtros</button>
+
 
         <button onclick="filtrarDatos()">Aplicar Filtros</button>
     </div>
