@@ -134,18 +134,34 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
-    // Limpiar estilos previos
-    capaEstados.resetStyle();
-
-    // Si se selecciona "Todos", mostrar todos los estados
-    if (estadoSeleccionado === "Todos") {
-        map.setView([23.6345, -102.5528], 5); // Zoom a nivel nacional
+    // Verificar si la capa de estados ha sido cargada
+    if (!ESTADOS) {
+        console.error("La capa de estados no ha sido cargada.");
         return;
     }
 
+    // Si se selecciona "Todos", ocultar la capa y resetear el mapa
+    if (estadoSeleccionado === "Todos") {
+        map.setView([23.6345, -102.5528], 5); // Zoom a nivel nacional
+        if (map.hasLayer(ESTADOS)) {
+            map.removeLayer(ESTADOS);
+        }
+        return;
+    } else {
+        if (!map.hasLayer(ESTADOS)) {
+            map.addLayer(ESTADOS);
+        }
+    }
+
+    // Limpiar estilos previos
+    ESTADOS.eachLayer(layer => {
+        ESTADOS.resetStyle(layer);
+    });
+
     // Buscar el estado seleccionado y cambiar su estilo
-    capaEstados.eachLayer(layer => {
-        if (layer.feature.properties.NOMBRE === estadoSeleccionado) {
+    let estadoEncontrado = false;
+    ESTADOS.eachLayer(layer => {
+        if (layer.feature.properties.Estado === estadoSeleccionado) { 
             layer.setStyle({
                 color: "#ff7800", // Color de resaltado
                 weight: 4,
@@ -154,9 +170,17 @@ function resaltarEstado() {
 
             // Hacer zoom al estado seleccionado
             map.fitBounds(layer.getBounds());
+            estadoEncontrado = true;
         }
     });
+
+    if (!estadoEncontrado) {
+        console.warn("No se encontró el estado seleccionado en la capa de estados.");
+    }
 }
 
 // Asignar la función al botón de filtros
-document.getElementById("botonFiltrar").addEventListener("click", resaltarEstado);
+document.getElementById("botonFiltrar").addEventListener("click", () => {
+    aplicarFiltros();
+    resaltarEstado();
+});
