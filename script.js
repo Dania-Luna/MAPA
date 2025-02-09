@@ -181,6 +181,7 @@ function resaltarEstado() {
 
 // Asignar la función al botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", () => {
-    aplicarFiltros();
-    resaltarEstado();
+    aplicarFiltros();   // Aplica los filtros a los puntos
+    setTimeout(resaltarEstado, 500);  // Aplica el zoom al estado (espera 0.5s)
 });
+
