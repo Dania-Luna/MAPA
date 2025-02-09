@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa Interactivo</title>
-    
-    <!-- Estilos de Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <title>Mapa de Centros de Atención</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
     <h1>Mapa de Centros de Atención</h1>
-    
-    <!-- Controles de filtros -->
-    <div id="filtros">
+    <div class="filters">
         <label for="estado">Filtrar por Estado:</label>
         <select id="estado">
             <option value="todos">Todos</option>
@@ -26,12 +23,9 @@
 
         <button onclick="filtrarDatos()">Aplicar Filtros</button>
     </div>
-    
-    <!-- Contenedor del mapa -->
+
     <div id="map"></div>
 
-    <!-- Scripts de Leaflet y el archivo principal -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
