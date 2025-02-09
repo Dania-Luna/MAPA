@@ -9,8 +9,8 @@ var baseMaps = {
     "Esri Imagery": L.tileLayer("https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
         attribution: "&copy; Esri, Maxar, Earthstar Geographics"
     }),
-    "OpenTopoMap": L.tileLayer("https://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; <a href='https://opentopomap.org/'>OpenTopoMap</a>"
+    "Google Satellite": L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+        attribution: "&copy; Google"
     })
 };
 
