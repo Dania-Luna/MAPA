@@ -3,38 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa de Centros de Atención</title>
-
-    <!-- Leaflet CSS -->
+    <title>Mapa Interactivo</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="style.css">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Mapa de Centros de Atención</h1>
-
-    <!-- Controles de filtros -->
-    <div id="filtros">
-        <label for="estado">Filtrar por Estado:</label>
-        <select id="estado">
-            <option value="todos">Todos</option>
-        </select>
-
-        <label for="tipo">Filtrar por Tipo de Unidad:</label>
-        <select id="tipo">
-            <option value="todos">Todos</option>
-        </select>
-
-        <button onclick="filtrarDatos()">Aplicar Filtros</button>
-    </div>
-
-    <!-- Contenedor del mapa -->
     <div id="map"></div>
-
-    <!-- Leaflet JS -->
+    
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Archivo JavaScript -->
-    <script src="script.js"></script>
+    <script>
+        var map = L.map('map').setView([23.6345, -102.5528], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        fetch('CENTROS_DE_ATENCION.geojson')
+            .then(response => response.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        console.log(feature.properties);  // Para depuración en consola
+
+                        var popupContent = `<b>Estado:</b> ${feature.properties.Estado || "No disponible"}<br>
+                                            <b>Municipio:</b> ${feature.properties.Municipio || "No disponible"}<br>
+                                            <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
+                                            <b>Tipo de Unidad:</b> ${feature.properties.Tipo || "No especificado"}<br>
+                                            <b>Dirección:</b> ${feature.properties.Direccion || "No disponible"}<br>
+                                            <b>Servicios:</b> ${feature.properties.Servicios || "No especificado"}<br>
+                                            <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
+                                            <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`;
+
+                        layer.bindPopup(popupContent);
+                    }
+                }).addTo(map);
+            })
+            .catch(error => console.error('Error cargando el archivo GeoJSON:', error));
+    </script>
 </body>
 </html>
