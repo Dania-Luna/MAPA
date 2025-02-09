@@ -29,6 +29,10 @@
     
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
+        function normalizarTexto(texto) {
+            return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+        }
+
         var map = L.map('map').setView([23.6345, -102.5528], 5);
         var markersLayer = L.layerGroup().addTo(map);
         var estadoLayer = L.layerGroup().addTo(map);
@@ -63,7 +67,7 @@
                 onEachFeature: function (feature, layer) {
                     console.log("Propiedades del punto:", feature.properties);
                     
-                    var estado = feature.properties["Estado"]?.trim().toLowerCase() || "";
+                    var estado = normalizarTexto(feature.properties["Estado"] || "");
                     var municipio = feature.properties["Municipio"]?.trim() || "No disponible";
                     var institucion = feature.properties["Nombre de la institución"]?.trim() || "No disponible";
                     var direccion = feature.properties["Dirección"]?.trim() || "No disponible";
@@ -89,7 +93,7 @@
             let estados = new Set();
             let tipos = new Set();
             data.features.forEach(feature => {
-                if (feature.properties.Estado) estados.add(feature.properties.Estado.trim().toLowerCase());
+                if (feature.properties.Estado) estados.add(normalizarTexto(feature.properties.Estado));
                 if (feature.properties.Tipo) tipos.add(feature.properties.Tipo.trim());
             });
 
@@ -112,7 +116,7 @@
         }
 
         function filtrarDatos() {
-            let estadoSeleccionado = document.getElementById("estado").value.trim().toLowerCase();
+            let estadoSeleccionado = normalizarTexto(document.getElementById("estado").value);
             let tipoSeleccionado = document.getElementById("tipo").value.trim();
             
             console.log("Estado seleccionado:", estadoSeleccionado);
@@ -121,7 +125,7 @@
             let datosFiltrados = {
                 type: "FeatureCollection",
                 features: geojsonData.features.filter(feature => {
-                    let estado = feature.properties["Estado"]?.trim().toLowerCase() || "";
+                    let estado = normalizarTexto(feature.properties["Estado"] || "");
                     let tipo = feature.properties["Tipo"]?.trim() || "";
                     console.log("Comparando:", estado, "con", estadoSeleccionado);
                     let cumpleEstado = estadoSeleccionado === "todos" || estado === estadoSeleccionado;
@@ -135,4 +139,5 @@
     </script>
 </body>
 </html>
+
 
