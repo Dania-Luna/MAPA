@@ -31,6 +31,7 @@
     <script>
         var map = L.map('map').setView([23.6345, -102.5528], 5);
         var markersLayer = L.layerGroup().addTo(map);
+        var estadoLayer = L.layerGroup().addTo(map);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -70,7 +71,7 @@
                     var horarios = feature.properties["Horarios"]?.trim() || "No disponible";
                     var telefono = feature.properties["Teléfono"]?.trim() || "No disponible";
                     
-                    var popupContent = `<b>Estado:</b> ${estado}<br>
+                    var popupContent = `<b>Estado:</b> ${feature.properties["Estado"]}<br>
                                         <b>Municipio:</b> ${municipio}<br>
                                         <b>Nombre de la institución:</b> ${institucion}<br>
                                         <b>Dirección:</b> ${direccion}<br>
@@ -114,18 +115,24 @@
             let estadoSeleccionado = document.getElementById("estado").value.trim().toLowerCase();
             let tipoSeleccionado = document.getElementById("tipo").value.trim();
             
+            console.log("Estado seleccionado:", estadoSeleccionado);
+            console.log("Tipo seleccionado:", tipoSeleccionado);
+            
             let datosFiltrados = {
                 type: "FeatureCollection",
                 features: geojsonData.features.filter(feature => {
                     let estado = feature.properties["Estado"]?.trim().toLowerCase() || "";
                     let tipo = feature.properties["Tipo"]?.trim() || "";
+                    console.log("Comparando:", estado, "con", estadoSeleccionado);
                     let cumpleEstado = estadoSeleccionado === "todos" || estado === estadoSeleccionado;
                     let cumpleTipo = tipoSeleccionado === "todos" || tipo === tipoSeleccionado;
                     return cumpleEstado && cumpleTipo;
                 })
             };
+            console.log("Datos filtrados:", datosFiltrados);
             cargarDatos(datosFiltrados);
         }
     </script>
 </body>
 </html>
+
