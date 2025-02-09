@@ -11,9 +11,6 @@ var baseMaps = {
     }),
     "Google Satellite": L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
         attribution: "&copy; Google"
-    }),
-    "Carto Light": L.tileLayer("https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-        attribution: "&copy; CartoDB"
     })
 };
 
@@ -29,7 +26,6 @@ var capaGeoJSON = L.layerGroup().addTo(map);
 var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
-var etiquetaEstado = null;  // 🔥 NUEVO: Variable para el nombre del estado
 
 // Función para asignar colores por tipo de unidad
 function getColorByTipo(tipo) {
@@ -124,6 +120,39 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
+// Función para aplicar filtros y mantener popups
+function aplicarFiltros() {
+    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+    let tipoSeleccionado = document.getElementById("filtroTipo").value;
+
+    let datosFiltrados = {
+        type: "FeatureCollection",
+        features: datosGeoJSON.features.filter(feature => {
+            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
+            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
+            return estadoValido && tipoValido;
+        })
+    };
+
+    capaGeoJSON.clearLayers();
+    cargarDatosMapa(datosFiltrados);
+}
+
+// Cargar la capa de estados sin mostrarla al inicio
+fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
+    .then(response => response.json())
+    .then(data => {
+        capaEstados = L.geoJSON(data, {
+            style: {
+                color: "transparent",
+                weight: 1,
+                fillOpacity: 0
+            }
+        });
+        console.log("Capa de estados cargada.");
+    })
+    .catch(error => console.error("Error cargando GeoJSON de estados:", error));
+
 // Función para resaltar un estado y hacer zoom
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
@@ -134,18 +163,11 @@ function resaltarEstado() {
             map.removeLayer(capaEstadoSeleccionado);
             capaEstadoSeleccionado = null;
         }
-        if (etiquetaEstado) {
-            map.removeLayer(etiquetaEstado);
-            etiquetaEstado = null;
-        }
         return;
     }
 
     if (capaEstadoSeleccionado) {
         map.removeLayer(capaEstadoSeleccionado);
-    }
-    if (etiquetaEstado) {
-        map.removeLayer(etiquetaEstado);
     }
 
     let estadoEncontrado = {
@@ -169,16 +191,11 @@ function resaltarEstado() {
 
     map.fitBounds(capaEstadoSeleccionado.getBounds());
 
-    // 🔥 NUEVO: Agregar etiqueta con el nombre del estado en su centro
-    let centro = capaEstadoSeleccionado.getBounds().getCenter();
-    etiquetaEstado = L.marker(centro, {
-        icon: L.divIcon({
-            className: "etiqueta-estado",
-            html: `<b>${estadoSeleccionado}</b>`,
-            iconSize: [100, 40],
-            iconAnchor: [50, 20]
-        })
-    }).addTo(map);
+    // **SOLUCIÓN: Recargar los puntos para restaurar los popups**
+    setTimeout(() => {
+        let estadoSeleccionado = document.getElementById("filtroEstado").value;
+        aplicarFiltros();
+    }, 500);
 }
 
 // Asignar la función al botón de filtros y reactivar popups
@@ -186,3 +203,4 @@ document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
     setTimeout(resaltarEstado, 500);
 });
+
