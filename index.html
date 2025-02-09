@@ -13,10 +13,14 @@
 
     <div class="filters">
         <label for="filtroEstado">Filtrar por Estado:</label>
-        <select id="filtroEstado"></select>  <!-- Se llenará dinámicamente -->
+        <select id="filtroEstado">
+            <option value="Todos">Todos</option>
+        </select>
 
         <label for="filtroTipo">Filtrar por Tipo de Unidad:</label>
-        <select id="filtroTipo"></select> <!-- Se llenará dinámicamente -->
+        <select id="filtroTipo">
+            <option value="Todos">Todos</option>
+        </select>
 
         <button onclick="aplicarFiltros()">Aplicar Filtros</button>
     </div>
