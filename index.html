@@ -4,36 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Centros de Atención</title>
-    
-    <!-- Estilos CSS -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Leaflet CSS y JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
     <h1>Mapa de Centros de Atención</h1>
 
-    <!-- Contenedor de filtros -->
     <div class="filters">
         <label for="filtroEstado">Filtrar por Estado:</label>
-        <select id="filtroEstado">
-            <option value="Todos">Todos</option>
-        </select>
+        <select id="filtroEstado"></select>  <!-- Se llenará dinámicamente -->
 
         <label for="filtroTipo">Filtrar por Tipo de Unidad:</label>
-        <select id="filtroTipo">
-            <option value="Todos">Todos</option>
-        </select>
+        <select id="filtroTipo"></select> <!-- Se llenará dinámicamente -->
 
-        <button id="botonFiltrar">Aplicar Filtros</button>
+        <button onclick="aplicarFiltros()">Aplicar Filtros</button>
     </div>
 
-    <!-- Contenedor del Mapa -->
     <div id="map"></div>
 
-    <!-- Script de configuración -->
     <script src="script.js"></script>
 </body>
 </html>
