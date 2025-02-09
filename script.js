@@ -21,6 +21,7 @@ function getColorByTipo(tipo) {
 }
 
 // Cargar los datos desde el archivo GeoJSON en GitHub Pages
+var datosGeoJSON = null; // Variable global para almacenar los datos
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
     .then(response => response.json())
     .then(data => {
@@ -56,7 +57,7 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
-// Función para aplicar filtros
+// *** Función para aplicar filtros (DEBE IR DESPUÉS DE cargarDatosMapa) ***
 function aplicarFiltros() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
     let tipoSeleccionado = document.getElementById("filtroTipo").value;
@@ -92,4 +93,8 @@ function aplicarFiltros() {
     capaGeoJSON.clearLayers();
     capaGeoJSON.addLayer(datosFiltrados);
 }
+
+// *** Evento para aplicar filtros cuando se presiona el botón ***
+document.getElementById("botonFiltrar").addEventListener("click", aplicarFiltros);
+
 
