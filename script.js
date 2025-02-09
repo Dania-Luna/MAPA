@@ -12,6 +12,22 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
+// Función para asignar colores por tipo de unidad
+function getColorByTipo(tipo) {
+    const colores = {
+        "CDM": "red",
+        "ULA/FIJA": "blue",
+        "CJM": "purple",
+        "Municipal": "black",
+        "CEB": "orange",
+        "ULA/Itinerante": "green",
+        "ULA/TEL": "brown",
+        "ULA/EMERGENCIA": "cyan",
+        "IMM": "pink"
+    };
+    return colores[tipo] || "gray";
+}
+
 // Cargar datos de centros de atención
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
     .then(response => response.json())
@@ -25,35 +41,31 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCIO
 
 // Función para limpiar datos incorrectos o nulos
 function limpiarDatos(datos) {
-    datos.features = datos.features.filter(feature => feature.properties.Estado && feature.properties["Nombre de la institución"]);
+    datos.features = datos.features.filter(feature => feature.properties.Estado && feature.properties.Tipo);
     return datos;
 }
 
-// Función para poblar los filtros de estados y nombres de institución
+// Función para poblar los filtros de estados y tipos de unidad
 function poblarFiltros(datos) {
     let estados = new Set();
-    let instituciones = new Set();
+    let tipos = new Set();
 
     datos.features.forEach(feature => {
         estados.add(feature.properties.Estado.trim());
-        instituciones.add(feature.properties["Nombre de la institución"].trim());
+        tipos.add(feature.properties.Tipo.trim());
     });
 
     let filtroEstado = document.getElementById("filtroEstado");
-    let filtroInstitucion = document.getElementById("filtroInstitucion"); // Cambio aquí
-
-    // Ordenar estados alfabéticamente
-    let estadosOrdenados = [...estados].sort();
-    let institucionesOrdenadas = [...instituciones].sort();
+    let filtroTipo = document.getElementById("filtroTipo");
 
     filtroEstado.innerHTML = `<option value="Todos">Todos</option>`;
-    estadosOrdenados.forEach(estado => {
+    estados.forEach(estado => {
         filtroEstado.innerHTML += `<option value="${estado}">${estado}</option>`;
     });
 
-    filtroInstitucion.innerHTML = `<option value="Todos">Todos</option>`;
-    institucionesOrdenadas.forEach(nombre => {
-        filtroInstitucion.innerHTML += `<option value="${nombre}">${nombre}</option>`;
+    filtroTipo.innerHTML = `<option value="Todos">Todos</option>`;
+    tipos.forEach(tipo => {
+        filtroTipo.innerHTML += `<option value="${tipo}">${tipo}</option>`;
     });
 }
 
@@ -65,7 +77,7 @@ function cargarDatosMapa(datos) {
         pointToLayer: function (feature, latlng) {
             let marker = L.circleMarker(latlng, {
                 radius: 6,
-                fillColor: "blue",
+                fillColor: getColorByTipo(feature.properties.Tipo),
                 color: "#000",
                 weight: 1,
                 opacity: 1,
@@ -77,9 +89,10 @@ function cargarDatosMapa(datos) {
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
                 <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
                 <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
+                <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}` 
+                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
             );
 
             return marker;
@@ -92,14 +105,14 @@ function cargarDatosMapa(datos) {
 // Función para aplicar filtros y mantener popups
 function aplicarFiltros() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
-    let institucionSeleccionada = document.getElementById("filtroInstitucion").value;
+    let tipoSeleccionado = document.getElementById("filtroTipo").value;
 
     let datosFiltrados = {
         type: "FeatureCollection",
         features: datosGeoJSON.features.filter(feature => {
             let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let institucionValida = institucionSeleccionada === "Todos" || feature.properties["Nombre de la institución"].trim() === institucionSeleccionada;
-            return estadoValido && institucionValida;
+            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
+            return estadoValido && tipoValido;
         })
     };
 
@@ -112,11 +125,11 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     .then(response => response.json())
     .then(data => {
         capaEstados = L.geoJSON(data, {
-            style: {
-                color: "transparent",
+            style: feature => ({
+                color: "transparent",  // Inicialmente invisible
                 weight: 1,
                 fillOpacity: 0
-            }
+            })
         });
         console.log("Capa de estados cargada.");
     })
@@ -159,6 +172,12 @@ function resaltarEstado() {
     }).addTo(map);
 
     map.fitBounds(capaEstadoSeleccionado.getBounds());
+
+    // **SOLUCIÓN: Recargar los puntos para restaurar los popups**
+    setTimeout(() => {
+        let estadoSeleccionado = document.getElementById("filtroEstado").value;
+        aplicarFiltros();
+    }, 500);
 }
 
 // Asignar la función al botón de filtros y reactivar popups
