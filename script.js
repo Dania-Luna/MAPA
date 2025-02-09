@@ -11,6 +11,9 @@ var baseMaps = {
     }),
     "Google Satellite": L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
         attribution: "&copy; Google"
+    }),
+    "Carto Light": L.tileLayer("https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
+        attribution: "&copy; CartoDB"
     })
 };
 
