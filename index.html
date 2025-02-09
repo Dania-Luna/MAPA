@@ -62,13 +62,21 @@
                 onEachFeature: function (feature, layer) {
                     console.log("Propiedades del punto:", feature.properties);
                     
-                    var popupContent = `<b>Estado:</b> ${feature.properties["Estado"]?.trim() || "No disponible"}<br>
-                                        <b>Municipio:</b> ${feature.properties["Municipio"]?.trim() || "No disponible"}<br>
-                                        <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"]?.trim() || "No disponible"}<br>
-                                        <b>Dirección:</b> ${feature.properties["Dirección"]?.trim() || "No disponible"}<br>
-                                        <b>Tipo de Unidad:</b> ${feature.properties["Tipo"]?.trim() || "No especificado"}<br>
-                                        <b>Horarios:</b> ${feature.properties["Horarios"]?.trim() || "No disponible"}<br>
-                                        <b>Teléfono:</b> ${feature.properties["Teléfono"]?.trim() || "No disponible"}`;
+                    var estado = feature.properties["Estado"]?.trim().toLowerCase() || "";
+                    var municipio = feature.properties["Municipio"]?.trim() || "No disponible";
+                    var institucion = feature.properties["Nombre de la institución"]?.trim() || "No disponible";
+                    var direccion = feature.properties["Dirección"]?.trim() || "No disponible";
+                    var tipo = feature.properties["Tipo"]?.trim() || "No especificado";
+                    var horarios = feature.properties["Horarios"]?.trim() || "No disponible";
+                    var telefono = feature.properties["Teléfono"]?.trim() || "No disponible";
+                    
+                    var popupContent = `<b>Estado:</b> ${estado}<br>
+                                        <b>Municipio:</b> ${municipio}<br>
+                                        <b>Nombre de la institución:</b> ${institucion}<br>
+                                        <b>Dirección:</b> ${direccion}<br>
+                                        <b>Tipo de Unidad:</b> ${tipo}<br>
+                                        <b>Horarios:</b> ${horarios}<br>
+                                        <b>Teléfono:</b> ${telefono}`;
                     
                     layer.bindPopup(popupContent);
                     markersLayer.addLayer(layer);
@@ -80,7 +88,7 @@
             let estados = new Set();
             let tipos = new Set();
             data.features.forEach(feature => {
-                if (feature.properties.Estado) estados.add(feature.properties.Estado.trim());
+                if (feature.properties.Estado) estados.add(feature.properties.Estado.trim().toLowerCase());
                 if (feature.properties.Tipo) tipos.add(feature.properties.Tipo.trim());
             });
 
@@ -90,7 +98,7 @@
             estados.forEach(estado => {
                 let option = document.createElement("option");
                 option.value = estado;
-                option.textContent = estado;
+                option.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
                 estadoSelect.appendChild(option);
             });
 
@@ -103,13 +111,13 @@
         }
 
         function filtrarDatos() {
-            let estadoSeleccionado = document.getElementById("estado").value.trim();
+            let estadoSeleccionado = document.getElementById("estado").value.trim().toLowerCase();
             let tipoSeleccionado = document.getElementById("tipo").value.trim();
             
             let datosFiltrados = {
                 type: "FeatureCollection",
                 features: geojsonData.features.filter(feature => {
-                    let estado = feature.properties["Estado"]?.trim() || "";
+                    let estado = feature.properties["Estado"]?.trim().toLowerCase() || "";
                     let tipo = feature.properties["Tipo"]?.trim() || "";
                     let cumpleEstado = estadoSeleccionado === "todos" || estado === estadoSeleccionado;
                     let cumpleTipo = tipoSeleccionado === "todos" || tipo === tipoSeleccionado;
@@ -121,4 +129,3 @@
     </script>
 </body>
 </html>
-
