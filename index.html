@@ -108,8 +108,8 @@
             let datosFiltrados = {
                 type: "FeatureCollection",
                 features: geojsonData.features.filter(feature => {
-                    let cumpleEstado = estadoSeleccionado === "todos" || feature.properties.Estado === estadoSeleccionado;
-                    let cumpleTipo = tipoSeleccionado === "todos" || feature.properties.Tipo === tipoSeleccionado;
+                    let cumpleEstado = estadoSeleccionado === "todos" || feature.properties["Estado"] === estadoSeleccionado;
+                    let cumpleTipo = tipoSeleccionado === "todos" || feature.properties["Tipo"] === tipoSeleccionado;
                     return cumpleEstado && cumpleTipo;
                 })
             };
@@ -118,3 +118,4 @@
     </script>
 </body>
 </html>
+
