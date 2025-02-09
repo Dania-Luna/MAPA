@@ -36,6 +36,7 @@ var colors = {
 
 // Cargar el archivo GeoJSON y llenar los filtros
 fetch("https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson")
+
     .then(response => response.json())
     .then(data => {
         geojsonData = data;  // Guardamos los datos originales
