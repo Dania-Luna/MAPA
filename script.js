@@ -1,10 +1,25 @@
 // Inicializar el mapa en México
 var map = L.map('map').setView([23.6345, -102.5528], 5);
 
-// Cargar la capa base de OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+// Definir mapas base
+var baseMaps = {
+    "OpenStreetMap": L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors"
+    }),
+    "Esri Imagery": L.tileLayer("https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        attribution: "&copy; Esri, Maxar, Earthstar Geographics"
+    }),
+    "OpenTopoMap": L.tileLayer("https://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; <a href='https://opentopomap.org/'>OpenTopoMap</a>"
+    })
+};
+
+// Agregar OpenStreetMap como mapa base por defecto
+var mapaBase = baseMaps["OpenStreetMap"];
+mapaBase.addTo(map);
+
+// Agregar control de capas para cambiar entre mapas base
+L.control.layers(baseMaps).addTo(map);
 
 // Capas del mapa
 var capaGeoJSON = L.layerGroup().addTo(map);
