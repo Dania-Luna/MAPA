@@ -157,7 +157,7 @@ function resaltarEstado() {
 
     let estadoEncontrado = false;
     capaEstados.eachLayer(layer => {
-        if (layer.feature.properties.NOMBRE === estadoSeleccionado) {  
+        if (layer.feature.properties.ESTADO === estadoSeleccionado) {  
             layer.setStyle({
                 color: "#ff7800",  
                 weight: 4,
