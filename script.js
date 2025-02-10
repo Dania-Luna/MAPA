@@ -25,7 +25,9 @@ L.control.layers(baseMaps).addTo(map);
 var capaGeoJSON = L.layerGroup().addTo(map);
 var datosGeoJSON = null;
 var capaEstados = null;
+var capaMunicipios = null;
 var capaEstadoSeleccionado = null;
+var capaMunicipioSeleccionado = null;
 
 // Función para asignar colores por tipo de unidad
 function getColorByTipo(tipo) {
@@ -60,85 +62,22 @@ function limpiarDatos(datos) {
     return datos;
 }
 
-// Función para poblar los filtros de estados y tipos de unidad, ordenando los estados alfabéticamente
-function poblarFiltros(datos) {
-    let estados = new Set();
-    let tipos = new Set();
-
-    datos.features.forEach(feature => {
-        estados.add(feature.properties.Estado.trim());
-        tipos.add(feature.properties.Tipo.trim());
-    });
-
-    let filtroEstado = document.getElementById("filtroEstado");
-    let filtroTipo = document.getElementById("filtroTipo");
-
-    // 🔥 Ordenar los estados alfabéticamente antes de agregarlos al filtro
-    let estadosOrdenados = [...estados].sort();
-
-    filtroEstado.innerHTML = <option value="Todos">Todos</option>;
-    estadosOrdenados.forEach(estado => {
-        filtroEstado.innerHTML += <option value="${estado}">${estado}</option>;
-    });
-
-    filtroTipo.innerHTML = <option value="Todos">Todos</option>;
-    tipos.forEach(tipo => {
-        filtroTipo.innerHTML += <option value="${tipo}">${tipo}</option>;
-    });
-}
-
-// Función para cargar los puntos en el mapa con popups
-function cargarDatosMapa(datos) {
-    capaGeoJSON.clearLayers(); // Limpiar los datos previos
-
-    var geojsonLayer = L.geoJSON(datos, {
-        pointToLayer: function (feature, latlng) {
-            let marker = L.circleMarker(latlng, {
-                radius: 6,
-                fillColor: getColorByTipo(feature.properties.Tipo),
-                color: "#000",
+// Cargar datos de municipios desde TopoJSON
+fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/MUNICIPIOS.topojson')
+    .then(response => response.json())
+    .then(data => {
+        capaMunicipios = L.geoJSON(topojson.feature(data, data.objects.MUNICIPIOS), {
+            style: {
+                color: "transparent",
                 weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            });
+                fillOpacity: 0
+            }
+        });
+        console.log("Capa de municipios cargada.");
+    })
+    .catch(error => console.error("Error cargando TopoJSON de municipios:", error));
 
-            marker.bindPopup(
-                <b>Estado:</b> ${feature.properties.Estado}<br>
-                <b>Municipio:</b> ${feature.properties.Municipio}<br>
-                <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
-                <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
-                <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
-                <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
-                <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"} 
-            );
-
-            return marker;
-        }
-    });
-
-    capaGeoJSON.addLayer(geojsonLayer);
-}
-
-// Función para aplicar filtros y mantener popups
-function aplicarFiltros() {
-    let estadoSeleccionado = document.getElementById("filtroEstado").value;
-    let tipoSeleccionado = document.getElementById("filtroTipo").value;
-
-    let datosFiltrados = {
-        type: "FeatureCollection",
-        features: datosGeoJSON.features.filter(feature => {
-            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
-            return estadoValido && tipoValido;
-        })
-    };
-
-    capaGeoJSON.clearLayers();
-    cargarDatosMapa(datosFiltrados);
-}
-
-// Cargar la capa de estados sin mostrarla al inicio
+// Cargar la capa de estados
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     .then(response => response.json())
     .then(data => {
@@ -153,53 +92,95 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     })
     .catch(error => console.error("Error cargando GeoJSON de estados:", error));
 
-// Función para resaltar un estado y hacer zoom
-function resaltarEstado() {
-    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+// Función para poblar los filtros de estados, municipios y tipos de unidad
+function poblarFiltros(datos) {
+    let estados = new Set();
+    let municipios = new Set();
+    let tipos = new Set();
 
-    if (estadoSeleccionado === "Todos") {
-        map.setView([23.6345, -102.5528], 5);
-        if (capaEstadoSeleccionado) {
-            map.removeLayer(capaEstadoSeleccionado);
-            capaEstadoSeleccionado = null;
-        }
-        return;
-    }
+    datos.features.forEach(feature => {
+        estados.add(feature.properties.Estado.trim());
+        municipios.add(feature.properties.Municipio.trim());
+        tipos.add(feature.properties.Tipo.trim());
+    });
 
-    if (capaEstadoSeleccionado) {
-        map.removeLayer(capaEstadoSeleccionado);
-    }
+    let filtroEstado = document.getElementById("filtroEstado");
+    let filtroMunicipio = document.getElementById("filtroMunicipio");
+    let filtroTipo = document.getElementById("filtroTipo");
 
-    let estadoEncontrado = {
-        type: "FeatureCollection",
-        features: capaEstados.toGeoJSON().features.filter(feature =>
-            feature.properties.ESTADO === estadoSeleccionado)
-    };
+    filtroEstado.innerHTML = `<option value="Todos">Todos</option>`;
+    [...estados].sort().forEach(estado => {
+        filtroEstado.innerHTML += `<option value="${estado}">${estado}</option>`;
+    });
 
-    if (estadoEncontrado.features.length === 0) {
-        console.warn("No se encontró el estado seleccionado.");
-        return;
-    }
+    filtroMunicipio.innerHTML = `<option value="Todos">Todos</option>`;
+    [...municipios].sort().forEach(municipio => {
+        filtroMunicipio.innerHTML += `<option value="${municipio}">${municipio}</option>`;
+    });
 
-    capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
-        style: {
-            color: "#ff7800",
-            weight: 3,
-            fillOpacity: 0
-        }
-    }).addTo(map);
-
-    map.fitBounds(capaEstadoSeleccionado.getBounds());
-
-    // **SOLUCIÓN: Recargar los puntos para restaurar los popups**
-    setTimeout(() => {
-        let estadoSeleccionado = document.getElementById("filtroEstado").value;
-        aplicarFiltros();
-    }, 500);
+    filtroTipo.innerHTML = `<option value="Todos">Todos</option>`;
+    [...tipos].forEach(tipo => {
+        filtroTipo.innerHTML += `<option value="${tipo}">${tipo}</option>`;
+    });
 }
 
-// Asignar la función al botón de filtros y reactivar popups
+// Función para cargar los puntos en el mapa con popups
+function cargarDatosMapa(datos) {
+    capaGeoJSON.clearLayers();
+
+    var geojsonLayer = L.geoJSON(datos, {
+        pointToLayer: function (feature, latlng) {
+            let marker = L.circleMarker(latlng, {
+                radius: 6,
+                fillColor: getColorByTipo(feature.properties.Tipo),
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            });
+
+            marker.bindPopup(`
+                <b>Estado:</b> ${feature.properties.Estado}<br>
+                <b>Municipio:</b> ${feature.properties.Municipio}<br>
+                <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
+                <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
+                <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
+                <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
+                <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
+                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}
+            `);
+
+            return marker;
+        }
+    });
+
+    capaGeoJSON.addLayer(geojsonLayer);
+}
+
+// Función para aplicar filtros
+function aplicarFiltros() {
+    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+    let municipioSeleccionado = document.getElementById("filtroMunicipio").value;
+    let tipoSeleccionado = document.getElementById("filtroTipo").value;
+
+    let datosFiltrados = {
+        type: "FeatureCollection",
+        features: datosGeoJSON.features.filter(feature => {
+            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
+            let municipioValido = municipioSeleccionado === "Todos" || feature.properties.Municipio.trim() === municipioSeleccionado;
+            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
+            return estadoValido && municipioValido && tipoValido;
+        })
+    };
+
+    capaGeoJSON.clearLayers();
+    cargarDatosMapa(datosFiltrados);
+}
+
+// Asignar eventos a los filtros
 document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
-    setTimeout(resaltarEstado, 500);
+    setTimeout(() => {
+        resaltarEstado();
+    }, 500);
 });
