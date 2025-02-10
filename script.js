@@ -27,21 +27,46 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores pastel al corazón según el tipo de unidad
+// Función para asignar colores según la nueva paleta
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#F4A6C0",          // Rosa claro
-        "ULA/FIJA": "#D8BFD8",     // Lila
-        "CJM": "#BAA0D0",          // Lavanda
-        "Municipal": "#AF69EE",    // Púrpura pastel
-        "CEB": "#E6A8D7",          // Rosa fuerte
-        "ULA/Itinerante": "#E4B7E5", // Malva claro
-        "ULA/TEL": "#DB7093",      // Rosa antiguo
-        "ULA/EMERGENCIA": "#C8A2C8", // Lila claro
-        "IMM": "#E6A0C4"           // Rosa femenino
+        "CDM": "#D8A29A",          // Rosa neutro
+        "ULA/FIJA": "#C0A29D",     // Beige rosado
+        "CJM": "#8A3E5F",          // Vino oscuro
+        "Municipal": "#4A5A5B",    // Verde grisáceo
+        "CEB": "#9A6A5C",          // Terracota claro
+        "ULA/Itinerante": "#DBB484", // Oro viejo
+        "ULA/TEL": "#586E75",      // Azul verdoso
+        "ULA/EMERGENCIA": "#D9C9B0", // Crema suave
+        "IMM": "#AF9AA5"           // Lavanda apagado
     };
-    return colores[tipo] || "#DDA0DD"; // Lila pastel por defecto
+    return colores[tipo] || "#A09C97"; // Color neutro por defecto
 }
+
+// Función para generar un marcador estilizado con fondo circular
+function getCustomIcon(tipo) {
+    let color = getColorByTipo(tipo);
+
+    return L.divIcon({
+        className: "custom-icon",
+        html: `<div style="
+            width: 36px; 
+            height: 36px; 
+            background-color: white; 
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid ${color};
+            box-shadow: 0px 0px 5px rgba(0,0,0,0.3);">
+            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:22px;"></i>
+        </div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        popupAnchor: [0, -36]
+    });
+}
+
 
 // Función para generar un icono de FontAwesome con color dinámico
 function getCustomIcon(tipo) {
