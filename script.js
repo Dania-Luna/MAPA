@@ -9,8 +9,8 @@ var baseMaps = {
     "Esri Imagery": L.tileLayer("https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
         attribution: "&copy; Esri, Maxar, Earthstar Geographics"
     }),
-    "Google Satellite": L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
-        attribution: "&copy; Google"
+    "OpenTopoMap": L.tileLayer("https://a.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; <a href='https://opentopomap.org/'>OpenTopoMap</a>"
     })
 };
 
@@ -27,10 +27,20 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// ✅ FUNCIÓN PARA LIMPIAR DATOS ANTES DE CARGARLOS
-function limpiarDatos(datos) {
-    datos.features = datos.features.filter(feature => feature.properties.Estado && feature.properties.Tipo);
-    return datos;
+// Función para asignar colores por tipo de unidad
+function getColorByTipo(tipo) {
+    const colores = {
+        "CDM": "red",
+        "ULA/FIJA": "blue",
+        "CJM": "purple",
+        "Municipal": "black",
+        "CEB": "orange",
+        "ULA/Itinerante": "green",
+        "ULA/TEL": "brown",
+        "ULA/EMERGENCIA": "cyan",
+        "IMM": "pink"
+    };
+    return colores[tipo] || "gray";
 }
 
 // Cargar datos de centros de atención
@@ -38,11 +48,17 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCIO
     .then(response => response.json())
     .then(data => {
         console.log("GeoJSON de centros cargado correctamente");
-        datosGeoJSON = limpiarDatos(data);  // ✅ Ahora esta función sí existe
+        datosGeoJSON = limpiarDatos(data);
         poblarFiltros(datosGeoJSON);
         cargarDatosMapa(datosGeoJSON);
     })
     .catch(error => console.error("Error cargando GeoJSON de centros:", error));
+
+// Función para limpiar datos incorrectos o nulos
+function limpiarDatos(datos) {
+    datos.features = datos.features.filter(feature => feature.properties.Estado && feature.properties.Tipo);
+    return datos;
+}
 
 // Función para poblar los filtros de estados y tipos de unidad, ordenando los estados alfabéticamente
 function poblarFiltros(datos) {
@@ -57,7 +73,7 @@ function poblarFiltros(datos) {
     let filtroEstado = document.getElementById("filtroEstado");
     let filtroTipo = document.getElementById("filtroTipo");
 
-    // Ordenar los estados alfabéticamente antes de agregarlos al filtro
+    // 🔥 Ordenar los estados alfabéticamente antes de agregarlos al filtro
     let estadosOrdenados = [...estados].sort();
 
     filtroEstado.innerHTML = `<option value="Todos">Todos</option>`;
