@@ -30,40 +30,40 @@ var capaEstadoSeleccionado = null;
 // Función para asignar colores según la nueva paleta
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#E36B6B",          // Rosa intenso
-        "ULA/FIJA": "#C0958E",     // Beige rosado
-        "CJM": "#912C4E",          // Vino
-        "Municipal": "#9AEDCC",    // Menta
-        "CEB": "#A4C8FB",          // Azul claro
-        "ULA/Itinerante": "#9F6A5C", // Terracota oscuro
-        "ULA/TEL": "#6D758F",      // Gris azulado
-        "ULA/EMERGENCIA": "#E3B67E", // Dorado suave
-        "IMM": "#C76483"           // Rosa fuerte
+        "CDM": "#D14545",          // Rojo suave
+        "ULA/FIJA": "#A36A4D",     // Marrón terracota
+        "CJM": "#7D3C98",          // Morado oscuro
+        "Municipal": "#2874A6",    // Azul fuerte
+        "CEB": "#DC7633",          // Naranja medio
+        "ULA/Itinerante": "#239B56", // Verde esmeralda
+        "ULA/TEL": "#5D6D7E",      // Gris azulado
+        "ULA/EMERGENCIA": "#D68910", // Dorado oscuro
+        "IMM": "#AF7AC5"           // Lila intenso
     };
-    return colores[tipo] || "#A09C97"; // Color neutro por defecto
+    return colores[tipo] || "#808B96"; // Color gris neutro por defecto
 }
 
-// Función para generar un marcador con el icono `fa-map-marker-alt`
+// Función para generar un marcador con icono más pequeño
 function getCustomIcon(tipo) {
     let color = getColorByTipo(tipo);
 
     return L.divIcon({
         className: "custom-icon",
         html: `<div style="
-            width: 28px; 
-            height: 28px; 
+            width: 24px; 
+            height: 24px; 
             background-color: white; 
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 2px solid ${color};
-            box-shadow: 0px 0px 3px rgba(0,0,0,0.2);">
-            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:16px;"></i>
+            box-shadow: 0px 0px 2px rgba(0,0,0,0.2);">
+            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:14px;"></i>
         </div>`,
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-        popupAnchor: [0, -28]
+        iconSize: [24, 24],
+        iconAnchor: [12, 24],
+        popupAnchor: [0, -24]
     });
 }
 
@@ -138,26 +138,23 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
-// Solución: Corregir error en `aplicarFiltros`
-function aplicarFiltros() {
+// Función para resaltar un estado y hacer zoom
+function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
-    let tipoSeleccionado = document.getElementById("filtroTipo").value;
 
-    let datosFiltrados = {
-        type: "FeatureCollection",
-        features: datosGeoJSON.features.filter(feature => {
-            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
-            return estadoValido && tipoValido;
-        })
-    };
-
-    capaGeoJSON.clearLayers();
-    cargarDatosMapa(datosFiltrados);
+    if (estadoSeleccionado === "Todos") {
+        map.setView([23.6345, -102.5528], 5);
+        if (capaEstadoSeleccionado) {
+            map.removeLayer(capaEstadoSeleccionado);
+            capaEstadoSeleccionado = null;
+        }
+        return;
+    }
 }
 
 // Asignar la función al botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
+    setTimeout(resaltarEstado, 500);
 });
 
