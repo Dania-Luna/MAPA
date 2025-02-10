@@ -129,7 +129,8 @@ function aplicarFiltros() {
         type: "FeatureCollection",
         features: datosGeoJSON.features.filter(feature => {
             let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
+            let tipoValido = tipoSeleccionado === "Todos" || feature.properties["Tipo de Unidad"].trim() === tipoSeleccionado;
+
             return estadoValido && tipoValido;
         })
     };
