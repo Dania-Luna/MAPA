@@ -75,21 +75,22 @@
             border-radius: 10px;
         }
 
-        /* 🔥 Subimos la leyenda más arriba */
         #legend {
-            position: absolute;
-            top: 60px; /* 📌 Subir más la leyenda */
-            right: 10px;
-            width: 280px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-            font-size: 14px;
-            overflow-y: auto;
-            max-height: 400px;
-            text-align: left;
-        }
+    position: absolute;
+    top: 60px; /* 📌 Subimos más la leyenda */
+    right: 10px;
+    width: 280px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    overflow-y: auto;
+    max-height: 400px;
+    text-align: left;
+    z-index: 1000; /* 🔥 Asegura que la leyenda esté siempre arriba */
+}
+
 
         .legend-item {
             display: flex;
