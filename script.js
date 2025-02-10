@@ -147,8 +147,8 @@ function cargarDatosMapa(datos) {
                 `<b>Estado:</b> ${feature.properties.Estado}<br>
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
                 <b>Nombre de la institución:</b> ${nombreInstitucion}<br>
-                <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
                 <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
+                <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
                 <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}` 
