@@ -27,20 +27,20 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad
+// Función para asignar colores pastel según el tipo de unidad
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "red",
-        "ULA/FIJA": "blue",
-        "CJM": "purple",
-        "Municipal": "black",
-        "CEB": "orange",
-        "ULA/Itinerante": "green",
-        "ULA/TEL": "brown",
-        "ULA/EMERGENCIA": "cyan",
-        "IMM": "pink"
+        "CDM": "#F4A6C0",          // Rosa claro
+        "ULA/FIJA": "#D8BFD8",     // Lila
+        "CJM": "#BAA0D0",          // Lavanda
+        "Municipal": "#AF69EE",    // Púrpura pastel
+        "CEB": "#E6A8D7",          // Rosa fuerte
+        "ULA/Itinerante": "#E4B7E5", // Malva claro
+        "ULA/TEL": "#DB7093",      // Rosa antiguo
+        "ULA/EMERGENCIA": "#C8A2C8", // Lila claro
+        "IMM": "#E6A0C4"           // Rosa femenino
     };
-    return colores[tipo] || "gray";
+    return colores[tipo] || "#DDA0DD"; // Por defecto, lila pastel
 }
 
 // Función para generar un icono de FontAwesome con color dinámico
@@ -48,10 +48,10 @@ function getCustomIcon(tipo) {
     let color = getColorByTipo(tipo);
     return L.divIcon({
         className: "custom-icon",
-        html: `<i class="fas fa-building" style="color:${color}; font-size:24px;"></i>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 24],
-        popupAnchor: [0, -24]
+        html: `<i class="fas fa-hand-holding-heart" style="color:${color}; font-size:22px;"></i>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 22],
+        popupAnchor: [0, -22]
     });
 }
 
@@ -125,42 +125,3 @@ function cargarDatosMapa(datos) {
 
     capaGeoJSON.addLayer(geojsonLayer);
 }
-
-// Función para aplicar filtros
-function aplicarFiltros() {
-    let estadoSeleccionado = document.getElementById("filtroEstado").value;
-    let tipoSeleccionado = document.getElementById("filtroTipo").value;
-
-    let datosFiltrados = {
-        type: "FeatureCollection",
-        features: datosGeoJSON.features.filter(feature => {
-            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
-            return estadoValido && tipoValido;
-        })
-    };
-
-    capaGeoJSON.clearLayers();
-    cargarDatosMapa(datosFiltrados);
-}
-
-// Cargar la capa de estados sin mostrarla al inicio
-fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
-    .then(response => response.json())
-    .then(data => {
-        capaEstados = L.geoJSON(data, {
-            style: {
-                color: "transparent",
-                weight: 1,
-                fillOpacity: 0
-            }
-        });
-        console.log("Capa de estados cargada.");
-    })
-    .catch(error => console.error("Error cargando GeoJSON de estados:", error));
-
-// Asignar la función al botón de filtros y reactivar popups
-document.getElementById("botonFiltrar").addEventListener("click", () => {
-    aplicarFiltros();
-    setTimeout(resaltarEstado, 500);
-});
