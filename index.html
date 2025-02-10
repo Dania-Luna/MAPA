@@ -22,7 +22,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #F5F5F5; /* 🎨 Color más neutral y moderno */
+            background-color: #F5F5F5;
         }
 
         h1 {
@@ -35,7 +35,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            background: #A67C52; /* 🎨 Color cálido, elegante y sin azul */
+            background: #A67C52;
             padding: 10px;
             border-radius: 8px;
             color: white;
@@ -75,7 +75,7 @@
             border-radius: 10px;
         }
 
-        /* 🔥 Ajustes en la leyenda */
+        /* Ajustes en la leyenda para que NO quede detrás del mapa */
         #legend {
             position: absolute;
             bottom: 10px;
@@ -89,6 +89,7 @@
             overflow-y: auto;
             max-height: 400px;
             text-align: left;
+            z-index: 1000; /* 🔥 Asegura que la leyenda siempre esté adelante */
         }
 
         .legend-item {
@@ -156,3 +157,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
