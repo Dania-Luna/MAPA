@@ -27,27 +27,27 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad con una paleta pastel equilibrada
+// Función para asignar colores por tipo de unidad con una nueva paleta equilibrada sin rojo ni gris
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#F7A1A1",
-        "ULA/FIJA": "#CBA6D7",
-        "CJM": "#A3C4F3",
-        "Municipal": "#99D8C9",
-        "CEB": "#F6D68B",
-        "ULA/Itinerante": "#EEC58F",
-        "ULA/TEL": "#B3B3D1",
-        "ULA/EMERGENCIA": "#FFA685",
-        "Punto Violeta": "#D9A7E3",
-        "Puerta Violeta": "#E6B3FF",
-        "CEAV": "#F8B195",
-        "IMMT": "#7DCFB6",
-        "MAI": "#A2D39C",
-        "IMM": "#FEC89A",
-        "CAVIZ": "#B5D8E5",
-        "DIG": "#A8C4A2"
+        "CDM": "#8E44AD",
+        "ULA/FIJA": "#5DADE2",
+        "CJM": "#48C9B0",
+        "Municipal": "#58D68D",
+        "CEB": "#F4D03F",
+        "ULA/Itinerante": "#E59866",
+        "ULA/TEL": "#AF7AC5",
+        "ULA/EMERGENCIA": "#2E86C1",
+        "Punto Violeta": "#BB8FCE",
+        "Puerta Violeta": "#A569BD",
+        "CEAV": "#D35400",
+        "IMMT": "#2980B9",
+        "MAI": "#1ABC9C",
+        "IMM": "#F5B041",
+        "CAVIZ": "#D68910",
+        "DIG": "#85C1E9"
     };
-    return colores[tipo] || "#D3C1E5";
+    return colores[tipo] || "#73C6B6";
 
 
 }
