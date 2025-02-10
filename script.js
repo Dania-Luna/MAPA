@@ -11,7 +11,6 @@ var baseMaps = {
     }),
     "Carto Light": L.tileLayer("https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
         attribution: "&copy; <a href='https://carto.com/'>Carto</a>"
-    
     })
 };
 
@@ -34,14 +33,56 @@ function getColorByTipo(tipo) {
         "CDM": "red",
         "ULA/FIJA": "blue",
         "CJM": "purple",
-        "Municipal": "black",
-        "CEB": "orange",
-        "ULA/Itinerante": "green",
-        "ULA/TEL": "brown",
-        "ULA/EMERGENCIA": "cyan",
-        "IMM": "pink"
+        "CEB": "black",
+        "ULA/Itinerante": "orange",
+        "ULA/TEL": "green",
+        "CDM/ITINERANTE": "brown",
+        "CAE/FIJA": "cyan",
+        "CJM/FIJA": "pink",
+        "LÍNEA TELEFÓNICA": "yellow",
+        "FIJA": "gray",
+        "IMMT": "magenta",
+        "CEA": "teal",
+        "UEPAVIG": "navy",
+        "UNIDA": "lime",
+        "CAMVIF": "maroon",
+        "CEAV": "olive",
+        "IMEF": "indigo",
+        "CJMF": "gold",
+        "CAVIZ": "silver",
+        "ULA/EMERGENCIA": "violet",
+        "ULA/MOVIL": "turquoise",
+        "IMM": "crimson",
+        "Punto Violeta": "darkblue",
+        "CEPAV": "darkgreen",
+        "IMPIEMH": "darkred",
+        "DIG": "darkorange",
+        "Municipal": "lightgreen",
+        "Estatal": "darkcyan",
+        "COBUPEJ": "darkslateblue",
+        "MAI": "deeppink",
+        "Puerta Violeta": "goldenrod",
+        "ULA/movil": "chocolate"
     };
-    return colores[tipo] || "gray";
+    return colores[tipo] || "black"; 
+}
+
+// Función para crear un icono con color personalizado
+function getCustomIcon(tipo) {
+    let color = getColorByTipo(tipo);
+    return L.divIcon({
+        className: "custom-icon",
+        html: `<div style="
+            width: 20px; 
+            height: 20px; 
+            background-color: ${color}; 
+            border-radius: 50%; 
+            border: 2px solid black;">
+        </div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10]
+    });
 }
 
 // Cargar datos de centros de atención
@@ -61,7 +102,7 @@ function limpiarDatos(datos) {
     return datos;
 }
 
-// Función para poblar los filtros de estados y tipos de unidad, ordenando los estados alfabéticamente
+// Función para poblar los filtros de estados y tipos de unidad
 function poblarFiltros(datos) {
     let estados = new Set();
     let tipos = new Set();
@@ -74,7 +115,6 @@ function poblarFiltros(datos) {
     let filtroEstado = document.getElementById("filtroEstado");
     let filtroTipo = document.getElementById("filtroTipo");
 
-    // 🔥 Ordenar los estados alfabéticamente antes de agregarlos al filtro
     let estadosOrdenados = [...estados].sort();
 
     filtroEstado.innerHTML = `<option value="Todos">Todos</option>`;
@@ -88,19 +128,14 @@ function poblarFiltros(datos) {
     });
 }
 
-// Función para cargar los puntos en el mapa con popups
+// Función para cargar los puntos en el mapa con iconos y popups
 function cargarDatosMapa(datos) {
-    capaGeoJSON.clearLayers(); // Limpiar los datos previos
+    capaGeoJSON.clearLayers(); 
 
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
-            let marker = L.circleMarker(latlng, {
-                radius: 6,
-                fillColor: getColorByTipo(feature.properties.Tipo),
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
+            let marker = L.marker(latlng, { 
+                icon: getCustomIcon(feature.properties.Tipo) 
             });
 
             marker.bindPopup(
@@ -111,7 +146,7 @@ function cargarDatosMapa(datos) {
                 <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}` 
+                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
             );
 
             return marker;
@@ -121,7 +156,7 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
-// Función para aplicar filtros y mantener popups
+// Función para aplicar filtros
 function aplicarFiltros() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
     let tipoSeleccionado = document.getElementById("filtroTipo").value;
@@ -154,53 +189,9 @@ fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
     })
     .catch(error => console.error("Error cargando GeoJSON de estados:", error));
 
-// Función para resaltar un estado y hacer zoom
-function resaltarEstado() {
-    let estadoSeleccionado = document.getElementById("filtroEstado").value;
-
-    if (estadoSeleccionado === "Todos") {
-        map.setView([23.6345, -102.5528], 5);
-        if (capaEstadoSeleccionado) {
-            map.removeLayer(capaEstadoSeleccionado);
-            capaEstadoSeleccionado = null;
-        }
-        return;
-    }
-
-    if (capaEstadoSeleccionado) {
-        map.removeLayer(capaEstadoSeleccionado);
-    }
-
-    let estadoEncontrado = {
-        type: "FeatureCollection",
-        features: capaEstados.toGeoJSON().features.filter(feature =>
-            feature.properties.ESTADO === estadoSeleccionado)
-    };
-
-    if (estadoEncontrado.features.length === 0) {
-        console.warn("No se encontró el estado seleccionado.");
-        return;
-    }
-
-    capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
-        style: {
-            color: "#ff7800",
-            weight: 3,
-            fillOpacity: 0
-        }
-    }).addTo(map);
-
-    map.fitBounds(capaEstadoSeleccionado.getBounds());
-
-    // **SOLUCIÓN: Recargar los puntos para restaurar los popups**
-    setTimeout(() => {
-        let estadoSeleccionado = document.getElementById("filtroEstado").value;
-        aplicarFiltros();
-    }, 500);
-}
-
 // Asignar la función al botón de filtros y reactivar popups
 document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
     setTimeout(resaltarEstado, 500);
 });
+
