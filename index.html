@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📍 Mapa de Centros de Atención</title>
+    <title>Mapa de Centros de Atención</title>
 
     <!-- Estilos -->
     <link rel="stylesheet" href="style.css">
@@ -22,18 +22,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #F5F5F5; 
+            background-color: #F5F5F5;
         }
 
         h1 {
-            font-size: 28px;
-            font-weight: bold;
-            color: #5D4037; 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
         }
 
         .filters {
@@ -82,9 +77,9 @@
 
         #legend {
             position: absolute;
-            top: 60px; 
+            top: 60px;
             right: 10px;
-            width: 300px; /* Más ancho */
+            width: 320px; /* Aumentamos el ancho */
             background: white;
             padding: 10px;
             border-radius: 8px;
@@ -100,17 +95,21 @@
             display: flex;
             align-items: center;
             margin-bottom: 5px;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .legend-item b {
             font-size: 14px;
-            margin-right: 5px;
+        }
+
+        .legend-icon {
+            font-size: 14px;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
-    <h1><i class="fas fa-map-marker-alt"></i> Mapa de Centros de Atención</h1>
+    <h1>Mapa de Centros de Atención</h1>
 
     <div class="filters">
         <label for="filtroEstado">Filtrar por Estado:</label>
@@ -130,9 +129,9 @@
         <div id="map"></div>  
         <div id="legend">
             <h3>Leyenda</h3>
-            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #FF5733;"></i> <b>CEA:</b> Centro Externo de Atención</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #1ABC9C;"></i> <b>CEA:</b> Centro Externo de Atención</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #A93226;"></i> <b>CDM:</b> Centro para el Desarrollo de las Mujeres</div>
-            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #AF7AC5;"></i> <b>CDM/ITINERANTE:</b> Centro para el Desarrollo de las Mujeres Itinerante</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #76448A;"></i> <b>CDM/ITINERANTE:</b> Centro para el Desarrollo de las Mujeres Itinerante</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #B9770E;"></i> <b>CEB:</b> Centro de Empoderamiento y Bienestar</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #A04000;"></i> <b>CEAV:</b> Comisión Ejecutiva de Atención a Víctimas</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #FF5733;"></i> <b>COBUPEJ:</b> Comisión de Búsqueda de Personas</div>
@@ -142,8 +141,8 @@
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #2980B9;"></i> <b>ESTATAL:</b> Atención Estatal</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #8E44AD;"></i> <b>IMEF:</b> Instituto de las Mujeres en la Economía y Finanzas</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #1F618D;"></i> <b>IMMT:</b> Instituto Municipal de la Mujer</div>
-            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #D35400;"></i> <b>IMM:</b> Instituto de la Mujer Municipal</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #145A32;"></i> <b>MAI:</b> Módulo de Atención Integral</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #D35400;"></i> <b>IMM:</b> Instituto de la Mujer Municipal</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #239B56;"></i> <b>Municipal:</b> Atención Municipal</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #9B59B6;"></i> <b>Punto Violeta:</b> Espacios Seguros para Mujeres</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #C39BD3;"></i> <b>Puerta Violeta:</b> Programa de Seguridad para Mujeres</div>
