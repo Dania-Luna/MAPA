@@ -30,28 +30,32 @@ var capaEstadoSeleccionado = null;
 // Función para asignar colores por tipo de unidad con la paleta original, eliminando el gris
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#A93226",  // Rojo oscuro
-        "ULA/FIJA": "#76448A",  // Morado
-        "CJM": "#E74C3C",  // Rojo vibrante
-        "Municipal": "#239B56",  // Verde
-        "CEB": "#B9770E",  // Mostaza
-        "ULA/Itinerante": "#D68910",  // Naranja oscuro
-        "ULA/TEL": "#5D6D7E",  // Azul grisáceo (sustituyendo gris)
-        "ULA/EMERGENCIA": "#E67E22",  // Naranja
-        "Punto Violeta": "#9B59B6",  // Púrpura
-        "Puerta Violeta": "#C39BD3",  // Lavanda
-        "CEAV": "#A04000",  // Rojo tierra
-        "IMMT": "#1F618D",  // Azul oscuro
-        "MAI": "#145A32",  // Verde oscuro
-        "IMM": "#D35400",  // Naranja fuerte
-        "CAVIZ": "#7D3C98",  // Morado intenso
-        "DIG": "#4D5656"  // Gris azulado oscuro
+        "CDM": "#A93226",
+        "ULA/FIJA": "#76448A",
+        "CJM": "#E74C3C",
+        "CEB": "#B9770E",
+        "Municipal": "#239B56",
+        "ULA/Itinerante": "#D68910",
+        "ULA/TEL": "#5D6D7E",
+        "ULA/EMERGENCIA": "#E67E22",
+        "Punto Violeta": "#9B59B6",
+        "Puerta Violeta": "#C39BD3",
+        "CEAV": "#A04000",
+        "IMMT": "#1F618D",
+        "MAI": "#145A32",
+        "IMM": "#D35400",
+        "CAVIZ": "#7D3C98",
+        "DIG": "#4D5656",
+        "CEA": "#2E86C1",
+        "IMEF": "#FF6F61",
+        "ULA/MÓVIL": "#27A4F2",
+        "ESTATAL": "#6D214F",
+        "MUNICIPAL": "#5D6D7E"
     };
-    return colores[tipo] || "#ABB2B9";  // Gris claro en caso de error
-
-
-
+    return colores[tipo] || "#AEB6BF"; // Color por defecto si no se encuentra el tipo
 }
+
+
 
 // Función para crear íconos personalizados
 function getCustomIcon(tipo) {
