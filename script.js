@@ -30,6 +30,12 @@ document.addEventListener("DOMContentLoaded", function () {
     var capaEstados = null;
     var capaEstadoSeleccionado = null;
 
+    // ✅ Definir la función limpiarDatos antes de usarla
+    function limpiarDatos(datos) {
+        datos.features = datos.features.filter(feature => feature.properties.Estado && feature.properties.Tipo);
+        return datos;
+    }
+
     // Función para asignar colores según la nueva paleta
     function getColorByTipo(tipo) {
         const colores = {
@@ -70,6 +76,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Función para cargar los datos en el mapa
+    function cargarDatosMapa(datos) {
+        capaGeoJSON.clearLayers(); 
+
+        var geojsonLayer = L.geoJSON(datos, {
+            pointToLayer: function (feature, latlng) {
+                let marker = L.marker(latlng, { 
+                    icon: getCustomIcon(feature.properties.Tipo) 
+                });
+
+                marker.bindPopup(
+                    `<b>Estado:</b> ${feature.properties.Estado}<br>
+                    <b>Municipio:</b> ${feature.properties.Municipio}<br>
+                    <b>Nombre de la institución:</b> ${feature.properties["Nombre_de_la_institucion"] || "No disponible"}<br>
+                    <b>Dirección:</b> ${feature.properties.Direccion || "No disponible"}<br>
+                    <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
+                    <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
+                    <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
+                    <b>Teléfono:</b> ${feature.properties.Telefono || "No disponible"}`
+                );
+
+                return marker;
+            }
+        });
+
+        capaGeoJSON.addLayer(geojsonLayer);
+    }
+
+    // Cargar datos de centros de atención
+    fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
+        .then(response => response.json())
+        .then(data => {
+            console.log("GeoJSON de centros cargado correctamente");
+            datosGeoJSON = limpiarDatos(data);
+            cargarDatosMapa(datosGeoJSON);
+        })
+        .catch(error => console.error("Error cargando GeoJSON de centros:", error));
+
     // Función para aplicar filtros
     function aplicarFiltros() {
         let estadoSeleccionado = document.getElementById("filtroEstado").value;
@@ -89,18 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         resaltarEstado(); // Resalta el estado después de aplicar el filtro
     }
 
-    // Cargar datos de centros de atención
-    fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
-        .then(response => response.json())
-        .then(data => {
-            console.log("GeoJSON de centros cargado correctamente");
-            datosGeoJSON = limpiarDatos(data);
-            poblarFiltros(datosGeoJSON);
-            cargarDatosMapa(datosGeoJSON);
-        })
-        .catch(error => console.error("Error cargando GeoJSON de centros:", error));
-
-    // Función para resaltar un estado y hacer zoom
+    // Restaurar la función original de zoom y resaltado de estados
     function resaltarEstado() {
         let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
@@ -112,34 +145,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             return;
         }
-
-        if (capaEstadoSeleccionado) {
-            map.removeLayer(capaEstadoSeleccionado);
-        }
-
-        let estadoEncontrado = {
-            type: "FeatureCollection",
-            features: capaEstados.toGeoJSON().features.filter(feature =>
-                feature.properties.ESTADO === estadoSeleccionado)
-        };
-
-        if (estadoEncontrado.features.length === 0) {
-            console.warn("No se encontró el estado seleccionado.");
-            return;
-        }
-
-        capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
-            style: {
-                color: "#ff7800",
-                weight: 3,
-                fillOpacity: 0
-            }
-        }).addTo(map);
-
-        map.fitBounds(capaEstadoSeleccionado.getBounds());
     }
 
     // Asignar la función al botón de filtros
     document.getElementById("botonFiltrar").addEventListener("click", aplicarFiltros);
 });
-
