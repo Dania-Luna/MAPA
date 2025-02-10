@@ -119,26 +119,54 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
-// Función para aplicar filtros
-function aplicarFiltros() {
-    let estadoSeleccionado = document.getElementById("filtroEstado").value;
-    let tipoSeleccionado = document.getElementById("filtroTipo").value;
+// Cargar la capa de estados y permitir resaltado
+fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
+    .then(response => response.json())
+    .then(data => {
+        capaEstados = L.geoJSON(data, {
+            style: {
+                color: "#000",
+                weight: 2,
+                fillOpacity: 0
+            }
+        }).addTo(map);
+    })
+    .catch(error => console.error("Error cargando GeoJSON de estados:", error));
 
-    let datosFiltrados = {
+// Función para resaltar un estado y hacer zoom
+function resaltarEstado() {
+    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+
+    if (capaEstadoSeleccionado) {
+        map.removeLayer(capaEstadoSeleccionado);
+    }
+
+    if (estadoSeleccionado === "Todos") {
+        map.setView([23.6345, -102.5528], 5);
+        return;
+    }
+
+    let estadoEncontrado = {
         type: "FeatureCollection",
-        features: datosGeoJSON.features.filter(feature => {
-            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let tipoValido = tipoSeleccionado === "Todos" || feature.properties["Tipo de Unidad"].trim() === tipoSeleccionado;
-            return estadoValido && tipoValido;
-        })
+        features: capaEstados.toGeoJSON().features.filter(feature =>
+            feature.properties.ESTADO === estadoSeleccionado)
     };
 
-    capaGeoJSON.clearLayers();
-    cargarDatosMapa(datosFiltrados);
+    if (estadoEncontrado.features.length > 0) {
+        capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
+            style: {
+                color: "#ff7800",
+                weight: 3,
+                fillOpacity: 0
+            }
+        }).addTo(map);
+
+        map.fitBounds(capaEstadoSeleccionado.getBounds());
+    }
 }
 
 // Asignar la función al botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
+    setTimeout(resaltarEstado, 500);
 });
-
