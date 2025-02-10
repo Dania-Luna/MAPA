@@ -27,32 +27,27 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad
-function getColorByTipo(tipo) {
-    const colores = {
-        "CDM": "red",
-        "ULA/FIJA": "blue",
-        "CJM": "purple",
-        "Municipal": "black",
-        "CEB": "orange",
-        "ULA/Itinerante": "green",
-        "ULA/TEL": "brown",
-        "ULA/EMERGENCIA": "cyan",
-        "IMM": "pink"
-    };
-    return colores[tipo] || "gray";
-}
+// Diccionario de iconos por color
+var iconPaths = {
+    "CDM": "/mnt/data/icon_red.png",
+    "ULA/FIJA": "/mnt/data/icon_blue.png",
+    "CJM": "/mnt/data/icon_purple.png",
+    "Municipal": "/mnt/data/icon_black.png",
+    "CEB": "/mnt/data/icon_orange.png",
+    "ULA/Itinerante": "/mnt/data/icon_green.png",
+    "ULA/TEL": "/mnt/data/icon_brown.png",
+    "ULA/EMERGENCIA": "/mnt/data/icon_cyan.png",
+    "IMM": "/mnt/data/icon_pink.png"
+};
 
-// Función para generar un icono con color según el tipo de unidad
+// Función para obtener el ícono personalizado
 function getCustomIcon(tipo) {
-    let color = getColorByTipo(tipo);
+    let iconUrl = iconPaths[tipo] || "/mnt/data/icon_black.png"; // Si no encuentra, usa negro
     return L.icon({
-        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`, 
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png",
-        shadowSize: [41, 41]
+        iconUrl: iconUrl,
+        iconSize: [30, 30], // Tamaño del ícono
+        iconAnchor: [15, 30], // Punto de anclaje del ícono
+        popupAnchor: [0, -30] // Ajuste para que el popup aparezca sobre el icono
     });
 }
 
@@ -73,7 +68,7 @@ function limpiarDatos(datos) {
     return datos;
 }
 
-// Función para poblar los filtros de estados y tipos de unidad, ordenando los estados alfabéticamente
+// Función para poblar los filtros de estados y tipos de unidad
 function poblarFiltros(datos) {
     let estados = new Set();
     let tipos = new Set();
@@ -165,4 +160,3 @@ document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
     setTimeout(resaltarEstado, 500);
 });
-
