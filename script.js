@@ -27,7 +27,7 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores según la nueva paleta
+// Función para asignar colores según la paleta elegida
 function getColorByTipo(tipo) {
     const colores = {
         "CDM": "#D8A29A",          // Rosa neutro
@@ -43,7 +43,7 @@ function getColorByTipo(tipo) {
     return colores[tipo] || "#A09C97"; // Color neutro por defecto
 }
 
-// Función para generar un marcador estilizado con fondo circular
+// Función para generar un marcador con el icono `fa-map-marker-alt`
 function getCustomIcon(tipo) {
     let color = getColorByTipo(tipo);
 
@@ -65,24 +65,6 @@ function getCustomIcon(tipo) {
         iconAnchor: [18, 36],
         popupAnchor: [0, -36]
     });
-}
-
-
-// Función para generar un icono de FontAwesome con color dinámico
-function getCustomIcon(tipo) {
-    let colorCorazon = getColorByTipo(tipo); // Color del corazón
-    let colorManos = "#E1A95F"; // Tono piel para las manos
-
-    return L.divIcon({
-        className: "custom-icon",
-        html: `<i class="fas fa-hand-holding-heart" style="color:${colorManos}; font-size:24px;"></i>
-               <i class="fas fa-heart" style="color:${colorCorazon}; font-size:16px; position: absolute; left: 8px; top: 5px;"></i>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 24],
-        popupAnchor: [0, -24]
-    });
-
-
 }
 
 // Cargar datos de centros de atención
@@ -155,3 +137,9 @@ function cargarDatosMapa(datos) {
 
     capaGeoJSON.addLayer(geojsonLayer);
 }
+
+// Asignar la función al botón de filtros y reactivar popups
+document.getElementById("botonFiltrar").addEventListener("click", () => {
+    aplicarFiltros();
+    setTimeout(resaltarEstado, 500);
+});
