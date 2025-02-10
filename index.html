@@ -80,7 +80,7 @@
             position: absolute;
             top: 20px;
             right: 10px;
-            width: 280px;
+            width: 320px; /* 📌 Aumentamos el ancho para evitar que el texto se corte */
             background: white;
             padding: 10px;
             border-radius: 8px;
@@ -96,7 +96,8 @@
             display: flex;
             align-items: center;
             margin-bottom: 5px;
-            font-size: 13px;
+            font-size: 14px;
+            width: 100%;
         }
 
         .legend-item i {
@@ -107,6 +108,8 @@
         .legend-item b {
             margin-left: 5px;
             font-size: 14px;
+            min-width: 110px; /* 📌 Hace que las siglas tengan un espacio definido */
+            display: inline-block;
         }
     </style>
 </head>
