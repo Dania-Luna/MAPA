@@ -27,27 +27,27 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad con una nueva paleta equilibrada sin rojo intenso ni gris
+// Función para asignar colores por tipo de unidad con la paleta original, eliminando el gris
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#C76969",  // Rojo suave en lugar de azul intenso
-        "ULA/FIJA": "#5DADE2",
-        "CJM": "#48C9B0",
-        "Municipal": "#58D68D",
-        "CEB": "#F4D03F",
-        "ULA/Itinerante": "#E59866",
-        "ULA/TEL": "#AF7AC5",
-        "ULA/EMERGENCIA": "#D98880",  // Rojo más apagado
-        "Punto Violeta": "#BB8FCE",
-        "Puerta Violeta": "#A569BD",
-        "CEAV": "#D35400",
-        "IMMT": "#C76969",  // Otro tono rojo más suave
-        "MAI": "#1ABC9C",
-        "IMM": "#F5B041",
-        "CAVIZ": "#D68910",
-        "DIG": "#85C1E9"
+        "CDM": "#A93226",  // Rojo oscuro
+        "ULA/FIJA": "#76448A",  // Morado
+        "CJM": "#E74C3C",  // Rojo vibrante
+        "Municipal": "#239B56",  // Verde
+        "CEB": "#B9770E",  // Mostaza
+        "ULA/Itinerante": "#D68910",  // Naranja oscuro
+        "ULA/TEL": "#5D6D7E",  // Azul grisáceo (sustituyendo gris)
+        "ULA/EMERGENCIA": "#E67E22",  // Naranja
+        "Punto Violeta": "#9B59B6",  // Púrpura
+        "Puerta Violeta": "#C39BD3",  // Lavanda
+        "CEAV": "#A04000",  // Rojo tierra
+        "IMMT": "#1F618D",  // Azul oscuro
+        "MAI": "#145A32",  // Verde oscuro
+        "IMM": "#D35400",  // Naranja fuerte
+        "CAVIZ": "#7D3C98",  // Morado intenso
+        "DIG": "#4D5656"  // Gris azulado oscuro
     };
-    return colores[tipo] || "#73C6B6";
+    return colores[tipo] || "#ABB2B9";  // Gris claro en caso de error
 
 
 
