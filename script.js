@@ -27,27 +27,28 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad con una nueva paleta equilibrada sin rojo ni gris
+// Función para asignar colores por tipo de unidad con una nueva paleta equilibrada sin rojo intenso ni gris
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#8E44AD",
+        "CDM": "#C76969",  // Rojo suave en lugar de azul intenso
         "ULA/FIJA": "#5DADE2",
         "CJM": "#48C9B0",
         "Municipal": "#58D68D",
         "CEB": "#F4D03F",
         "ULA/Itinerante": "#E59866",
         "ULA/TEL": "#AF7AC5",
-        "ULA/EMERGENCIA": "#2E86C1",
+        "ULA/EMERGENCIA": "#D98880",  // Rojo más apagado
         "Punto Violeta": "#BB8FCE",
         "Puerta Violeta": "#A569BD",
         "CEAV": "#D35400",
-        "IMMT": "#2980B9",
+        "IMMT": "#C76969",  // Otro tono rojo más suave
         "MAI": "#1ABC9C",
         "IMM": "#F5B041",
         "CAVIZ": "#D68910",
         "DIG": "#85C1E9"
     };
     return colores[tipo] || "#73C6B6";
+
 
 
 }
