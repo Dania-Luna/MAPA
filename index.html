@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa de Centros de Atención</title>
+    <title>Mapa de Centros de Atención y Apoyo para las Mujeres</title>
 
     <!-- Estilos -->
     <link rel="stylesheet" href="style.css">
@@ -26,9 +26,16 @@
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 26px;
             margin-bottom: 10px;
             color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 i {
+            color: #A93226;
         }
 
         .filters {
@@ -77,18 +84,20 @@
 
         #legend {
             position: absolute;
-            top: 100px; /* 🔽 Ajustado para que no cubra los mapas base */
+            top: 90px; /* 📌 Ajustado para no tapar los controles del mapa */
             right: 10px;
-            width: 350px; /* 📏 Aumento del ancho para mejor alineación */
+            width: 360px; /* 📏 Más ancho */
             background: white;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
             font-size: 14px;
+            overflow-x: auto; /* 🔥 Scroll horizontal */
             overflow-y: auto;
             max-height: 400px;
             text-align: left;
             z-index: 1000;
+            white-space: nowrap; /* 📌 Evita el salto de línea en los nombres */
         }
 
         .legend-item {
@@ -98,19 +107,17 @@
             font-size: 14px;
         }
 
-        .legend-item b {
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
-        .legend-icon {
-            font-size: 14px;
+        .legend-item i {
             margin-right: 8px;
         }
     </style>
 </head>
 <body>
-    <h1>Mapa de Centros de Atención</h1>
+    <h1>
+        <i class="fas fa-hands-holding-heart"></i>
+        Mapa de Centros de Atención y Apoyo para las Mujeres
+        <i class="fas fa-search-location"></i>
+    </h1>
 
     <div class="filters">
         <label for="filtroEstado">Filtrar por Estado:</label>
