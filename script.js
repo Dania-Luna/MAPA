@@ -27,20 +27,28 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad
+// Función para asignar colores por tipo de unidad con una paleta equilibrada
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#C0392B",
-        "ULA/FIJA": "#8E44AD",
-        "CJM": "#2980B9",
-        "Municipal": "#27AE60",
-        "CEB": "#D35400",
-        "ULA/Itinerante": "#F1C40F",
-        "ULA/TEL": "#7F8C8D",
-        "ULA/EMERGENCIA": "#E67E22",
-        "IMM": "#E91E63"
+        "CDM": "#A93226",
+        "ULA/FIJA": "#76448A",
+        "CJM": "#2874A6",
+        "Municipal": "#239B56",
+        "CEB": "#B9770E",
+        "ULA/Itinerante": "#D68910",
+        "ULA/TEL": "#616A6B",
+        "ULA/EMERGENCIA": "#E74C3C",
+        "Punto Violeta": "#9B59B6",
+        "Puerta Violeta": "#C39BD3",
+        "CEAV": "#A04000",
+        "IMMT": "#1F618D",
+        "MAI": "#145A32",
+        "IMM": "#D35400",
+        "CAVIZ": "#7B7D7D",
+        "DIG": "#4D5656"
     };
-    return colores[tipo] || "#A0A0A0";
+    return colores[tipo] || "#AEB6BF";
+
 }
 
 // Función para crear íconos personalizados
