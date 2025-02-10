@@ -30,17 +30,17 @@ var capaEstadoSeleccionado = null;
 // Función para asignar colores según la nueva paleta
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#D14545",          // Rojo suave
-        "ULA/FIJA": "#A36A4D",     // Marrón terracota
-        "CJM": "#7D3C98",          // Morado oscuro
-        "Municipal": "#2874A6",    // Azul fuerte
-        "CEB": "#DC7633",          // Naranja medio
-        "ULA/Itinerante": "#239B56", // Verde esmeralda
-        "ULA/TEL": "#5D6D7E",      // Gris azulado
-        "ULA/EMERGENCIA": "#D68910", // Dorado oscuro
-        "IMM": "#AF7AC5"           // Lila intenso
+        "CDM": "#C0392B",          // Rojo oscuro
+        "ULA/FIJA": "#8E44AD",     // Morado
+        "CJM": "#2980B9",          // Azul medio
+        "Municipal": "#27AE60",    // Verde
+        "CEB": "#D35400",          // Naranja
+        "ULA/Itinerante": "#F1C40F", // Amarillo dorado
+        "ULA/TEL": "#7F8C8D",      // Gris
+        "ULA/EMERGENCIA": "#E67E22", // Naranja intenso
+        "IMM": "#E91E63"           // Rosa fuerte
     };
-    return colores[tipo] || "#808B96"; // Color gris neutro por defecto
+    return colores[tipo] || "#A0A0A0"; // Color gris neutro por defecto
 }
 
 // Función para generar un marcador con icono más pequeño
@@ -50,8 +50,8 @@ function getCustomIcon(tipo) {
     return L.divIcon({
         className: "custom-icon",
         html: `<div style="
-            width: 18px; 
-            height: 18px; 
+            width: 16px; 
+            height: 16px; 
             background-color: white; 
             border-radius: 50%;
             display: flex;
@@ -59,11 +59,11 @@ function getCustomIcon(tipo) {
             justify-content: center;
             border: 2px solid ${color};
             box-shadow: 0px 0px 2px rgba(0,0,0,0.2);">
-            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:12px;"></i>
+            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:10px;"></i>
         </div>`,
-        iconSize: [18, 18],
-        iconAnchor: [9, 18],
-        popupAnchor: [0, -18]
+        iconSize: [16, 16],
+        iconAnchor: [8, 16],
+        popupAnchor: [0, -16]
     });
 }
 
@@ -110,24 +110,6 @@ function poblarFiltros(datos) {
     });
 }
 
-// Función para aplicar los filtros correctamente
-function aplicarFiltros() {
-    let estadoSeleccionado = document.getElementById("filtroEstado").value;
-    let tipoSeleccionado = document.getElementById("filtroTipo").value;
-
-    let datosFiltrados = {
-        type: "FeatureCollection",
-        features: datosGeoJSON.features.filter(feature => {
-            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
-            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
-            return estadoValido && tipoValido;
-        })
-    };
-
-    capaGeoJSON.clearLayers();
-    cargarDatosMapa(datosFiltrados);
-}
-
 // Función para cargar los iconos en el mapa con popups
 function cargarDatosMapa(datos) {
     capaGeoJSON.clearLayers(); 
@@ -156,7 +138,7 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
-// Función para resaltar un estado y hacer zoom
+// Restaurar la función original de zoom y resaltado de estados
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
@@ -168,6 +150,8 @@ function resaltarEstado() {
         }
         return;
     }
+
+    aplicarFiltros();
 }
 
 // Asignar la función al botón de filtros
