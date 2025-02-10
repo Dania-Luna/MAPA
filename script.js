@@ -1,7 +1,7 @@
-// Inicializar el mapa en México
+
 var map = L.map('map').setView([23.6345, -102.5528], 5);
 
-// Definir mapas base
+// mapas base
 var baseMaps = {
     "OpenStreetMap": L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors"
@@ -14,11 +14,11 @@ var baseMaps = {
     })
 };
 
-// Agregar OpenStreetMap como mapa base por defecto
+// OpenStreetMap 
 var mapaBase = baseMaps["OpenStreetMap"];
 mapaBase.addTo(map);
 
-// Agregar control de capas para cambiar entre mapas base
+
 L.control.layers(baseMaps).addTo(map);
 
 // Capas del mapa
@@ -27,7 +27,7 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad
+// colores por tipo de unidad
 function getColorByTipo(tipo) {
     const colores = {
         "CDM": "#A93226",
@@ -50,15 +50,15 @@ function getColorByTipo(tipo) {
         "CDM/ITINERANTE": "#AF7AC5",
         "CEA": "#1ABC9C",
         "ESTATAL": "#2980B9",
-        "IMEF": "#8E44AD" // Color agregado para IMEF
+        "IMEF": "#8E44AD" // 
     };
-    return colores[tipo] || "#AEB6BF"; // Color por defecto si no se encuentra el tipo
+    return colores[tipo] || "#AEB6BF"; 
 }
 
 
 
 
-// Función para crear íconos personalizados
+// íconos personalizados
 function getCustomIcon(tipo) {
     let color = getColorByTipo(tipo);
     
@@ -82,7 +82,7 @@ function getCustomIcon(tipo) {
     });
 }
 
-// Cargar datos de centros de atención
+// Cargar datos 
 fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/CENTROS_DE_ATENCION.geojson')
     .then(response => response.json())
     .then(data => {
@@ -99,7 +99,7 @@ function limpiarDatos(datos) {
     return datos;
 }
 
-// Función para poblar los filtros
+
 function poblarFiltros(datos) {
     let estados = new Set();
     let tipos = new Set();
@@ -125,16 +125,16 @@ function poblarFiltros(datos) {
     });
 }
 
-// Función para cargar los puntos en el mapa con popups
+// cargar los puntos en el mapa con popups
 function cargarDatosMapa(datos) {
     capaGeoJSON.clearLayers(); 
 
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
-            // Acceder correctamente a "Nombre de la institución"
+           
             let nombreInstitucion = feature.properties["Nombre de la institución"];
 
-            // Verificar si es un valor válido (evitar valores 'None' o 'null' incorrectos)
+            
             if (!nombreInstitucion || nombreInstitucion === "null" || nombreInstitucion === null || nombreInstitucion === "None") {
                 nombreInstitucion = "No disponible";
             }
@@ -164,7 +164,7 @@ function cargarDatosMapa(datos) {
 
 }
 
-// Función para aplicar filtros
+//  aplicar filtros
 function aplicarFiltros() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
     let tipoSeleccionado = document.getElementById("filtroTipo").value;
@@ -180,10 +180,9 @@ function aplicarFiltros() {
 
     capaGeoJSON.clearLayers();
     cargarDatosMapa(datosFiltrados);
-    resaltarEstado(); // Agregamos la función para resaltar y hacer zoom
-}
+    resaltarEstado(); 
 
-// Restaurar la función de zoom y resaltado de estados
+// zoom y resaltado de estados
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
@@ -196,7 +195,7 @@ function resaltarEstado() {
         return;
     }
 
-    // Cargar la capa de estados si no está cargada
+    
     if (!capaEstados) {
         fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
             .then(response => response.json())
@@ -231,6 +230,6 @@ function resaltarEstado() {
     map.fitBounds(capaEstadoSeleccionado.getBounds());
 }
 
-// Asignar la función al botón de filtros
+// botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", aplicarFiltros);
 
