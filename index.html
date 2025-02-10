@@ -4,16 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Centros de Atención</title>
+
+    <!-- Estilos -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Leaflet para el mapa -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+    <!-- FontAwesome para los íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        /* Ajustes generales */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Contenedor del mapa */
+        #map {
+            width: 90%;
+            height: 600px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        /* Contenedor de filtros */
+        .filters {
+            margin-bottom: 10px;
+        }
+
+        select, button {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #AF69EE; /* Púrpura pastel */
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #BAA0D0; /* Lavanda */
+        }
+    </style>
 
 </head>
 <body>
     <h1>Mapa de Centros de Atención</h1>
 
+    <!-- Filtros -->
     <div class="filters">
         <label for="filtroEstado">Filtrar por Estado:</label>
         <select id="filtroEstado">
@@ -28,8 +73,10 @@
         <button id="botonFiltrar">Aplicar Filtros</button>
     </div>
 
+    <!-- Mapa -->
     <div id="map"></div>
 
+    <!-- Script del mapa -->
     <script src="script.js"></script>
 </body>
 </html>
