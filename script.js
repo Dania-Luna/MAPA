@@ -154,9 +154,10 @@ function aplicarFiltros() {
 
     capaGeoJSON.clearLayers();
     cargarDatosMapa(datosFiltrados);
+    resaltarEstado(); // Agregamos la función para resaltar y hacer zoom
 }
 
-// Restaurar la función original de zoom y resaltado de estados
+// Restaurar la función de zoom y resaltado de estados
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
@@ -168,11 +169,42 @@ function resaltarEstado() {
         }
         return;
     }
+
+    // Cargar la capa de estados si no está cargada
+    if (!capaEstados) {
+        fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
+            .then(response => response.json())
+            .then(data => {
+                capaEstados = L.geoJSON(data);
+                resaltarEstado(); 
+            })
+            .catch(error => console.error("Error cargando GeoJSON de estados:", error));
+        return;
+    }
+
+    if (capaEstadoSeleccionado) {
+        map.removeLayer(capaEstadoSeleccionado);
+    }
+
+    let estadoEncontrado = {
+        type: "FeatureCollection",
+        features: capaEstados.toGeoJSON().features.filter(feature =>
+            feature.properties.ESTADO === estadoSeleccionado)
+    };
+
+    if (estadoEncontrado.features.length === 0) return;
+
+    capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
+        style: {
+            color: "#FF5733",
+            weight: 3,
+            fillOpacity: 0
+        }
+    }).addTo(map);
+
+    map.fitBounds(capaEstadoSeleccionado.getBounds());
 }
 
 // Asignar la función al botón de filtros
-document.getElementById("botonFiltrar").addEventListener("click", () => {
-    aplicarFiltros();
-    setTimeout(resaltarEstado, 500);
-});
+document.getElementById("botonFiltrar").addEventListener("click", aplicarFiltros);
 
