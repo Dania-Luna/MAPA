@@ -18,7 +18,7 @@
     <!-- Fuente Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     
-    <style>
+   <style>
     body {
         font-family: 'Poppins', sans-serif;
         text-align: center;
@@ -99,9 +99,10 @@
         border-radius: 10px;
     }
 
+    /* 📌 Estilos para la leyenda */
     #legend {
         position: absolute;
-        top: 10px;
+        top: 60px;
         right: 10px;
         width: 90%;
         max-width: 380px;
@@ -131,6 +132,21 @@
         flex-shrink: 0;
     }
 
+    /* 📌 Botón para mostrar/ocultar la leyenda en móviles */
+    #toggleLegend {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #D81B60;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1100;
+    }
+
+    /* 📌 Ajustes para dispositivos móviles */
     @media (max-width: 768px) {
         .custom-title {
             font-size: 20px;
@@ -157,9 +173,26 @@
             width: 95%;
             max-width: 95%;
             font-size: 12px;
+            display: none; /* Ocultar por defecto en móviles */
+        }
+
+        #toggleLegend {
+            display: block; /* Botón visible solo en móviles */
+        }
+    }
+
+    /* 📌 En pantallas grandes, la leyenda siempre visible */
+    @media (min-width: 769px) {
+        #legend {
+            display: block;
+        }
+
+        #toggleLegend {
+            display: none; /* Ocultar botón en pantallas grandes */
         }
     }
 </style>
+
 
 </head>
 <body>
@@ -183,10 +216,10 @@
         <button id="botonFiltrar">Aplicar Filtros</button>
     </div>
 
-    <div id="container">
-        <div id="map"></div>  
-        <div id="legend">
-            <h3>Leyenda</h3>
+    <button id="toggleLegend">Mostrar Leyenda</button>
+
+<div id="legend" class="hidden">
+    <h3>Leyenda</h3>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #1ABC9C;"></i> <b>CEA:</b> Centro Externo de Atención</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #A93226;"></i> <b>CDM:</b> Centro para el Desarrollo de las Mujeres</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #76448A;"></i> <b>CDM/ITINERANTE:</b> Centro para el Desarrollo de las Mujeres Itinerante</div>
