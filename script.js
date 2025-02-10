@@ -116,6 +116,11 @@ function cargarDatosMapa(datos) {
 
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
+            let nombreInstitucion = feature.properties["Nombre de la institución"];
+            if (!nombreInstitucion || nombreInstitucion === "null" || nombreInstitucion === null) {
+                nombreInstitucion = "No disponible";
+            }
+
             let marker = L.marker(latlng, { 
                 icon: getCustomIcon(feature.properties.Tipo) 
             });
@@ -123,7 +128,7 @@ function cargarDatosMapa(datos) {
             marker.bindPopup(
                 `<b>Estado:</b> ${feature.properties.Estado}<br>
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
-                <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
+                <b>Nombre de la institución:</b> ${nombreInstitucion}<br>
                 <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
                 <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
@@ -136,6 +141,8 @@ function cargarDatosMapa(datos) {
     });
 
     capaGeoJSON.addLayer(geojsonLayer);
+
+
 }
 
 // Función para aplicar filtros
