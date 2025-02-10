@@ -14,46 +14,6 @@
 
     <!-- FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <style>
-        /* Ajustes generales */
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        /* Contenedor del mapa */
-        #map {
-            width: 90%;
-            height: 600px;
-            margin: 20px auto;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-        }
-
-        /* Contenedor de filtros */
-        .filters {
-            margin-bottom: 10px;
-        }
-
-        select, button {
-            padding: 8px;
-            margin: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            background-color: #AF69EE; /* Púrpura pastel */
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #BAA0D0; /* Lavanda */
-        }
-    </style>
-
 </head>
 <body>
     <h1>Mapa de Centros de Atención</h1>
@@ -70,8 +30,7 @@
             <option value="Todos">Todos</option>
         </select>
 
-        <button id="botonFiltrar" onclick="aplicarFiltros()">Aplicar Filtros</button>
-
+        <button id="botonFiltrar">Aplicar Filtros</button>
     </div>
 
     <!-- Mapa -->
@@ -81,3 +40,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
