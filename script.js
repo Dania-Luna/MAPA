@@ -232,3 +232,16 @@ function resaltarEstado() {
 
 // Botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", aplicarFiltros);
+
+// Botón para mostrar/ocultar la leyenda en móviles
+document.getElementById("toggleLegend").addEventListener("click", function() {
+    var legend = document.getElementById("legend");
+    if (legend.style.display === "none" || legend.style.display === "") {
+        legend.style.display = "block";
+        this.textContent = "Ocultar Leyenda";
+    } else {
+        legend.style.display = "none";
+        this.textContent = "Mostrar Leyenda";
+    }
+});
+
