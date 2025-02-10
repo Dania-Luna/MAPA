@@ -1,4 +1,4 @@
-:// Inicializar el mapa en México
+// Inicializar el mapa en México
 var map = L.map('map').setView([23.6345, -102.5528], 5);
 
 // Definir mapas base
