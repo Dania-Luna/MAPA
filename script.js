@@ -164,7 +164,7 @@ function cargarDatosMapa(datos) {
 
 }
 
-//  aplicar filtros
+// Aplicar filtros
 function aplicarFiltros() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
     let tipoSeleccionado = document.getElementById("filtroTipo").value;
@@ -180,9 +180,10 @@ function aplicarFiltros() {
 
     capaGeoJSON.clearLayers();
     cargarDatosMapa(datosFiltrados);
-    resaltarEstado(); 
+    resaltarEstado(); // Llamamos a la función para resaltar estados
+} // **💡 CERRAMOS CORRECTAMENTE LA FUNCIÓN APLICARFILTROS()**
 
-// zoom y resaltado de estados
+// Zoom y resaltado de estados
 function resaltarEstado() {
     let estadoSeleccionado = document.getElementById("filtroEstado").value;
 
@@ -195,7 +196,6 @@ function resaltarEstado() {
         return;
     }
 
-    
     if (!capaEstados) {
         fetch('https://raw.githubusercontent.com/Dania-Luna/MAPA/main/ESTADOS.geojson')
             .then(response => response.json())
@@ -230,6 +230,5 @@ function resaltarEstado() {
     map.fitBounds(capaEstadoSeleccionado.getBounds());
 }
 
-// botón de filtros
+// Botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", aplicarFiltros);
-
