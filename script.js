@@ -50,8 +50,8 @@ function getCustomIcon(tipo) {
     return L.divIcon({
         className: "custom-icon",
         html: `<div style="
-            width: 24px; 
-            height: 24px; 
+            width: 18px; 
+            height: 18px; 
             background-color: white; 
             border-radius: 50%;
             display: flex;
@@ -59,11 +59,11 @@ function getCustomIcon(tipo) {
             justify-content: center;
             border: 2px solid ${color};
             box-shadow: 0px 0px 2px rgba(0,0,0,0.2);">
-            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:14px;"></i>
+            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:12px;"></i>
         </div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 24],
-        popupAnchor: [0, -24]
+        iconSize: [18, 18],
+        iconAnchor: [9, 18],
+        popupAnchor: [0, -18]
     });
 }
 
@@ -108,6 +108,24 @@ function poblarFiltros(datos) {
     tipos.forEach(tipo => {
         filtroTipo.innerHTML += `<option value="${tipo}">${tipo}</option>`;
     });
+}
+
+// Función para aplicar los filtros correctamente
+function aplicarFiltros() {
+    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+    let tipoSeleccionado = document.getElementById("filtroTipo").value;
+
+    let datosFiltrados = {
+        type: "FeatureCollection",
+        features: datosGeoJSON.features.filter(feature => {
+            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
+            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
+            return estadoValido && tipoValido;
+        })
+    };
+
+    capaGeoJSON.clearLayers();
+    cargarDatosMapa(datosFiltrados);
 }
 
 // Función para cargar los iconos en el mapa con popups
