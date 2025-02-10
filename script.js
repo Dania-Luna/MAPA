@@ -33,55 +33,26 @@ function getColorByTipo(tipo) {
         "CDM": "red",
         "ULA/FIJA": "blue",
         "CJM": "purple",
-        "CEB": "black",
-        "ULA/Itinerante": "orange",
-        "ULA/TEL": "green",
-        "CDM/ITINERANTE": "brown",
-        "CAE/FIJA": "cyan",
-        "CJM/FIJA": "pink",
-        "LÍNEA TELEFÓNICA": "yellow",
-        "FIJA": "gray",
-        "IMMT": "magenta",
-        "CEA": "teal",
-        "UEPAVIG": "navy",
-        "UNIDA": "lime",
-        "CAMVIF": "maroon",
-        "CEAV": "olive",
-        "IMEF": "indigo",
-        "CJMF": "gold",
-        "CAVIZ": "silver",
-        "ULA/EMERGENCIA": "violet",
-        "ULA/MOVIL": "turquoise",
-        "IMM": "crimson",
-        "Punto Violeta": "darkblue",
-        "CEPAV": "darkgreen",
-        "IMPIEMH": "darkred",
-        "DIG": "darkorange",
-        "Municipal": "lightgreen",
-        "Estatal": "darkcyan",
-        "COBUPEJ": "darkslateblue",
-        "MAI": "deeppink",
-        "Puerta Violeta": "goldenrod",
-        "ULA/movil": "chocolate"
+        "Municipal": "black",
+        "CEB": "orange",
+        "ULA/Itinerante": "green",
+        "ULA/TEL": "brown",
+        "ULA/EMERGENCIA": "cyan",
+        "IMM": "pink"
     };
-    return colores[tipo] || "black"; 
+    return colores[tipo] || "gray";
 }
 
-// Función para crear un icono con color personalizado
+// Función para generar un icono con color según el tipo de unidad
 function getCustomIcon(tipo) {
     let color = getColorByTipo(tipo);
-    return L.divIcon({
-        className: "custom-icon",
-        html: `<div style="
-            width: 20px; 
-            height: 20px; 
-            background-color: ${color}; 
-            border-radius: 50%; 
-            border: 2px solid black;">
-        </div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        popupAnchor: [0, -10]
+    return L.icon({
+        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`, 
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png",
+        shadowSize: [41, 41]
     });
 }
 
@@ -102,7 +73,7 @@ function limpiarDatos(datos) {
     return datos;
 }
 
-// Función para poblar los filtros de estados y tipos de unidad
+// Función para poblar los filtros de estados y tipos de unidad, ordenando los estados alfabéticamente
 function poblarFiltros(datos) {
     let estados = new Set();
     let tipos = new Set();
@@ -128,7 +99,7 @@ function poblarFiltros(datos) {
     });
 }
 
-// Función para cargar los puntos en el mapa con iconos y popups
+// Función para cargar los iconos en el mapa con popups
 function cargarDatosMapa(datos) {
     capaGeoJSON.clearLayers(); 
 
