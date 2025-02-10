@@ -27,14 +27,14 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores por tipo de unidad con la paleta original, eliminando el gris
+// Función para asignar colores por tipo de unidad
 function getColorByTipo(tipo) {
     const colores = {
         "CDM": "#A93226",
         "ULA/FIJA": "#76448A",
         "CJM": "#E74C3C",
-        "CEB": "#B9770E",
         "Municipal": "#239B56",
+        "CEB": "#B9770E",
         "ULA/Itinerante": "#D68910",
         "ULA/TEL": "#5D6D7E",
         "ULA/EMERGENCIA": "#E67E22",
@@ -44,16 +44,17 @@ function getColorByTipo(tipo) {
         "IMMT": "#1F618D",
         "MAI": "#145A32",
         "IMM": "#D35400",
-        "CAVIZ": "#7D3C98",
+        "CAVIZ": "#7B7D7D",
         "DIG": "#4D5656",
-        "CEA": "#2E86C1",
-        "IMEF": "#FF6F61",
-        "ULA/MÓVIL": "#27A4F2",
-        "ESTATAL": "#6D214F",
-        "MUNICIPAL": "#5D6D7E"
+        "COBUPEJ": "#FF5733",
+        "CDM/ITINERANTE": "#AF7AC5",
+        "CEA": "#1ABC9C",
+        "ESTATAL": "#2980B9",
+        "IMEF": "#8E44AD" // Color agregado para IMEF
     };
     return colores[tipo] || "#AEB6BF"; // Color por defecto si no se encuentra el tipo
 }
+
 
 
 
