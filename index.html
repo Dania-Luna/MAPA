@@ -25,13 +25,14 @@
         }
 
         #container {
-            position: relative;
+            display: flex;
             width: 90%;
             height: 600px;
+            position: relative;
         }
 
         #map {
-            width: 100%;
+            flex: 3;
             height: 100%;
             border: 2px solid #ddd;
             border-radius: 10px;
@@ -42,20 +43,22 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 250px;
+            width: 280px;
             background: white;
             padding: 10px;
             border-radius: 8px;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
             font-size: 14px;
             overflow-y: auto;
             max-height: 500px;
+            z-index: 1000;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
+            white-space: nowrap;
         }
 
         .legend-icon {
