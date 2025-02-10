@@ -14,10 +14,13 @@
 
     <!-- FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Fuente Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -25,24 +28,25 @@
             background-color: #F5F5F5;
         }
 
-        h1 {
-            font-size: 26px;
+        .custom-title {
+            font-size: 30px;
             margin-bottom: 10px;
-            color: #333;
+            color: #2C3E50;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            font-weight: bold;
         }
 
-        h1 i {
-            color: #A93226;
+        .custom-title i {
+            color: #D81B60; /* Color rosa para resaltar el ícono */
         }
 
         .filters {
             display: flex;
             gap: 10px;
             align-items: center;
-            background: #A67C52;
+            background: #F8BBD0; /* 🎨 Color rosa pastel */
             padding: 10px;
             border-radius: 8px;
             color: white;
@@ -51,6 +55,7 @@
 
         .filters label {
             font-weight: bold;
+            color: #880E4F;
         }
 
         select, button {
@@ -61,13 +66,13 @@
         }
 
         button {
-            background-color: #5D4037;
+            background-color: #D81B60;
             color: white;
             cursor: pointer;
         }
 
         button:hover {
-            background-color: #4E342E;
+            background-color: #AD1457;
         }
 
         #container {
@@ -84,39 +89,41 @@
 
         #legend {
             position: absolute;
-            top: 90px; /* 📌 Ajustado para no tapar los controles del mapa */
+            top: 90px;
             right: 10px;
-            width: 360px; /* 📏 Más ancho */
+            width: 380px;
             background: white;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
             font-size: 14px;
-            overflow-x: auto; /* 🔥 Scroll horizontal */
+            overflow-x: auto;
             overflow-y: auto;
             max-height: 400px;
             text-align: left;
             z-index: 1000;
-            white-space: nowrap; /* 📌 Evita el salto de línea en los nombres */
+            white-space: nowrap;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
             margin-bottom: 5px;
             font-size: 14px;
         }
 
         .legend-item i {
-            margin-right: 8px;
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
-    <h1>
+    <h1 class="custom-title">
         <i class="fas fa-hands-holding-heart"></i>
         Mapa de Centros de Atención y Apoyo para las Mujeres
-        <i class="fas fa-search-location"></i>
+        <i class="fas fa-search"></i>
     </h1>
 
     <div class="filters">
@@ -154,9 +161,6 @@
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #239B56;"></i> <b>Municipal:</b> Atención Municipal</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #9B59B6;"></i> <b>Punto Violeta:</b> Espacios Seguros para Mujeres</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #C39BD3;"></i> <b>Puerta Violeta:</b> Programa de Seguridad para Mujeres</div>
-            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #D68910;"></i> <b>ULA/Itinerante:</b> Unidad Local de Atención Itinerante</div>
-            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #5D6D7E;"></i> <b>ULA/TEL:</b> Línea de Atención Telefónica</div>
-            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #E67E22;"></i> <b>ULA/EMERGENCIA:</b> Unidad de Atención de Emergencia</div>
         </div>
     </div>
 
