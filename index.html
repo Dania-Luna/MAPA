@@ -22,7 +22,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #F5F5F5;
+            background-color: #F5F5F5; /* 🎨 Fondo neutro */
         }
 
         h1 {
@@ -35,7 +35,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            background: #A67C52;
+            background: #A67C52; /* 🎨 Color cálido */
             padding: 10px;
             border-radius: 8px;
             color: white;
@@ -75,10 +75,10 @@
             border-radius: 10px;
         }
 
-        /* 🔥 Ajuste de la leyenda */
+        /* 🔥 Leyenda ajustada */
         #legend {
             position: absolute;
-            top: 50px; /* 📌 Subida un poco más */
+            top: 20px;
             right: 10px;
             width: 280px;
             background: white;
@@ -89,25 +89,24 @@
             overflow-y: auto;
             max-height: 400px;
             text-align: left;
-            z-index: 1000; /* 🔥 Asegura que la leyenda esté siempre arriba */
+            z-index: 1000; /* 🔥 Asegura que la leyenda esté visible */
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px; /* 🛠 Espacio entre ícono y texto */
-            font-size: 13px;
             margin-bottom: 5px;
+            font-size: 13px;
         }
 
         .legend-item i {
-            flex-shrink: 0;
-            font-size: 16px; /* 📌 Ajusta el tamaño del ícono */
+            width: 20px;
+            text-align: center;
         }
 
         .legend-item b {
-            min-width: 130px; /* 📌 Asegura alineación de las iniciales */
-            display: inline-block;
+            margin-left: 5px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -146,10 +145,16 @@
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #1F618D;"></i> <b>IMMT:</b> Instituto Municipal de la Mujer</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #145A32;"></i> <b>MAI:</b> Módulo de Atención Integral</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #D35400;"></i> <b>IMM:</b> Instituto de la Mujer Municipal</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #7B7D7D;"></i> <b>CAVIZ:</b> Centro de Atención a la Violencia</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #4D5656;"></i> <b>DIG:</b> Dirección de Igualdad de Género</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #FF5733;"></i> <b>COBUPEJ:</b> Comisión de Búsqueda de Personas</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #AF7AC5;"></i> <b>CDM/ITINERANTE:</b> Centro para el Desarrollo de las Mujeres Itinerante</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #1ABC9C;"></i> <b>CEA:</b> Centro Externo de Atención</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #2980B9;"></i> <b>ESTATAL:</b> Atención Estatal</div>
+            <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #8E44AD;"></i> <b>IMEF:</b> Instituto de las Mujeres en la Economía y Finanzas</div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
