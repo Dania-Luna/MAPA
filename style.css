@@ -1,4 +1,4 @@
-/* Estilos generales */
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -7,13 +7,13 @@ body {
     background-color: #f4f4f4;
 }
 
-/* Encabezado */
+
 h1 {
     color: #333;
     margin: 20px 0;
 }
 
-/* Contenedor del mapa */
+
 #map {
     width: 80%;
     height: 500px;
@@ -23,7 +23,7 @@ h1 {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenedor de filtros */
+
 #filtros {
     display: flex;
     flex-wrap: wrap;
@@ -39,7 +39,7 @@ h1 {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para etiquetas, select y botones */
+
 #filtros label {
     font-weight: bold;
     font-size: 16px;
@@ -67,7 +67,7 @@ h1 {
     background: #0056b3;
 }
 
-/* Ajustes responsivos para móviles */
+
 @media screen and (max-width: 768px) {
     #map {
         width: 100%;
