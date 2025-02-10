@@ -27,7 +27,7 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores pastel según el tipo de unidad
+// Función para asignar colores pastel al corazón según el tipo de unidad
 function getColorByTipo(tipo) {
     const colores = {
         "CDM": "#F4A6C0",          // Rosa claro
@@ -40,19 +40,24 @@ function getColorByTipo(tipo) {
         "ULA/EMERGENCIA": "#C8A2C8", // Lila claro
         "IMM": "#E6A0C4"           // Rosa femenino
     };
-    return colores[tipo] || "#DDA0DD"; // Por defecto, lila pastel
+    return colores[tipo] || "#DDA0DD"; // Lila pastel por defecto
 }
 
 // Función para generar un icono de FontAwesome con color dinámico
 function getCustomIcon(tipo) {
-    let color = getColorByTipo(tipo);
+    let colorCorazon = getColorByTipo(tipo); // Color del corazón
+    let colorManos = "#E1A95F"; // Tono piel para las manos
+
     return L.divIcon({
         className: "custom-icon",
-        html: `<i class="fas fa-hand-holding-heart" style="color:${color}; font-size:22px;"></i>`,
-        iconSize: [22, 22],
-        iconAnchor: [11, 22],
-        popupAnchor: [0, -22]
+        html: `<i class="fas fa-hand-holding-heart" style="color:${colorManos}; font-size:24px;"></i>
+               <i class="fas fa-heart" style="color:${colorCorazon}; font-size:16px; position: absolute; left: 8px; top: 5px;"></i>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 24],
+        popupAnchor: [0, -24]
     });
+
+
 }
 
 // Cargar datos de centros de atención
