@@ -27,18 +27,18 @@ var datosGeoJSON = null;
 var capaEstados = null;
 var capaEstadoSeleccionado = null;
 
-// Función para asignar colores según la paleta elegida
+// Función para asignar colores según la nueva paleta
 function getColorByTipo(tipo) {
     const colores = {
-        "CDM": "#D8A29A",          // Rosa neutro
-        "ULA/FIJA": "#C0A29D",     // Beige rosado
-        "CJM": "#8A3E5F",          // Vino oscuro
-        "Municipal": "#4A5A5B",    // Verde grisáceo
-        "CEB": "#9A6A5C",          // Terracota claro
-        "ULA/Itinerante": "#DBB484", // Oro viejo
-        "ULA/TEL": "#586E75",      // Azul verdoso
-        "ULA/EMERGENCIA": "#D9C9B0", // Crema suave
-        "IMM": "#AF9AA5"           // Lavanda apagado
+        "CDM": "#E36B6B",          // Rosa intenso
+        "ULA/FIJA": "#C0958E",     // Beige rosado
+        "CJM": "#912C4E",          // Vino
+        "Municipal": "#9AEDCC",    // Menta
+        "CEB": "#A4C8FB",          // Azul claro
+        "ULA/Itinerante": "#9F6A5C", // Terracota oscuro
+        "ULA/TEL": "#6D758F",      // Gris azulado
+        "ULA/EMERGENCIA": "#E3B67E", // Dorado suave
+        "IMM": "#C76483"           // Rosa fuerte
     };
     return colores[tipo] || "#A09C97"; // Color neutro por defecto
 }
@@ -50,20 +50,20 @@ function getCustomIcon(tipo) {
     return L.divIcon({
         className: "custom-icon",
         html: `<div style="
-            width: 36px; 
-            height: 36px; 
+            width: 28px; 
+            height: 28px; 
             background-color: white; 
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid ${color};
-            box-shadow: 0px 0px 5px rgba(0,0,0,0.3);">
-            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:22px;"></i>
+            border: 2px solid ${color};
+            box-shadow: 0px 0px 3px rgba(0,0,0,0.2);">
+            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:16px;"></i>
         </div>`,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -36]
+        iconSize: [28, 28],
+        iconAnchor: [14, 28],
+        popupAnchor: [0, -28]
     });
 }
 
@@ -138,8 +138,26 @@ function cargarDatosMapa(datos) {
     capaGeoJSON.addLayer(geojsonLayer);
 }
 
-// Asignar la función al botón de filtros y reactivar popups
+// Solución: Corregir error en `aplicarFiltros`
+function aplicarFiltros() {
+    let estadoSeleccionado = document.getElementById("filtroEstado").value;
+    let tipoSeleccionado = document.getElementById("filtroTipo").value;
+
+    let datosFiltrados = {
+        type: "FeatureCollection",
+        features: datosGeoJSON.features.filter(feature => {
+            let estadoValido = estadoSeleccionado === "Todos" || feature.properties.Estado.trim() === estadoSeleccionado;
+            let tipoValido = tipoSeleccionado === "Todos" || feature.properties.Tipo.trim() === tipoSeleccionado;
+            return estadoValido && tipoValido;
+        })
+    };
+
+    capaGeoJSON.clearLayers();
+    cargarDatosMapa(datosFiltrados);
+}
+
+// Asignar la función al botón de filtros
 document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
-    setTimeout(resaltarEstado, 500);
 });
+
