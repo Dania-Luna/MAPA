@@ -217,11 +217,12 @@
 
         <button id="botonFiltrar">Aplicar Filtros</button>
     </div>
-
-    <button id="toggleLegend">Mostrar Leyenda</button>
-
-<div id="legend" class="hidden">
-    <h3>Leyenda</h3>
+    <div id="container">
+        <div id="map"></div>
+    </div>
+<button id="toggleLegend">Mostrar Leyenda</button>
+    <div id="legend" class="hidden">
+        <h3>Leyenda</h3>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #1ABC9C;"></i> <b>CEA:</b> Centro Externo de Atención</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #A93226;"></i> <b>CDM:</b> Centro para el Desarrollo de las Mujeres</div>
             <div class="legend-item"><i class="fas fa-map-marker-alt" style="color: #76448A;"></i> <b>CDM/ITINERANTE:</b> Centro para el Desarrollo de las Mujeres Itinerante</div>
@@ -242,6 +243,11 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var map = L.map('map').setView([23.6345, -102.5528], 5);
+    });
+</script>
+ <script src="script.js" defer></script>
 </body>
 </html>
