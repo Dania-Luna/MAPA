@@ -50,8 +50,8 @@ function getCustomIcon(tipo) {
     return L.divIcon({
         className: "custom-icon",
         html: `<div style="
-            width: 16px; 
-            height: 16px; 
+            width: 14px; 
+            height: 14px; 
             background-color: white; 
             border-radius: 50%;
             display: flex;
@@ -59,11 +59,11 @@ function getCustomIcon(tipo) {
             justify-content: center;
             border: 2px solid ${color};
             box-shadow: 0px 0px 2px rgba(0,0,0,0.2);">
-            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:10px;"></i>
+            <i class="fas fa-map-marker-alt" style="color:${color}; font-size:8px;"></i>
         </div>`,
-        iconSize: [16, 16],
-        iconAnchor: [8, 16],
-        popupAnchor: [0, -16]
+        iconSize: [14, 14],
+        iconAnchor: [7, 14],
+        popupAnchor: [0, -14]
     });
 }
 
@@ -123,12 +123,12 @@ function cargarDatosMapa(datos) {
             marker.bindPopup(
                 `<b>Estado:</b> ${feature.properties.Estado}<br>
                 <b>Municipio:</b> ${feature.properties.Municipio}<br>
-                <b>Nombre de la institución:</b> ${feature.properties["Nombre de la institución"] || "No disponible"}<br>
-                <b>Dirección:</b> ${feature.properties.Dirección || "No disponible"}<br>
+                <b>Nombre de la institución:</b> ${feature.properties["Nombre_de_la_institucion"] || "No disponible"}<br>
+                <b>Dirección:</b> ${feature.properties.Direccion || "No disponible"}<br>
                 <b>Tipo de Unidad:</b> ${feature.properties.Tipo}<br>
                 <b>Servicios:</b> ${feature.properties.Servicios || "No disponible"}<br>
                 <b>Horarios:</b> ${feature.properties.Horarios || "No disponible"}<br>
-                <b>Teléfono:</b> ${feature.properties.Teléfono || "No disponible"}`
+                <b>Teléfono:</b> ${feature.properties.Telefono || "No disponible"}`
             );
 
             return marker;
@@ -151,7 +151,30 @@ function resaltarEstado() {
         return;
     }
 
-    aplicarFiltros();
+    if (capaEstadoSeleccionado) {
+        map.removeLayer(capaEstadoSeleccionado);
+    }
+
+    let estadoEncontrado = {
+        type: "FeatureCollection",
+        features: capaEstados.toGeoJSON().features.filter(feature =>
+            feature.properties.ESTADO === estadoSeleccionado)
+    };
+
+    if (estadoEncontrado.features.length === 0) {
+        console.warn("No se encontró el estado seleccionado.");
+        return;
+    }
+
+    capaEstadoSeleccionado = L.geoJSON(estadoEncontrado, {
+        style: {
+            color: "#ff7800",
+            weight: 3,
+            fillOpacity: 0
+        }
+    }).addTo(map);
+
+    map.fitBounds(capaEstadoSeleccionado.getBounds());
 }
 
 // Asignar la función al botón de filtros
@@ -159,4 +182,3 @@ document.getElementById("botonFiltrar").addEventListener("click", () => {
     aplicarFiltros();
     setTimeout(resaltarEstado, 500);
 });
-
