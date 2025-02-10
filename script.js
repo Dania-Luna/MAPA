@@ -116,8 +116,11 @@ function cargarDatosMapa(datos) {
 
     var geojsonLayer = L.geoJSON(datos, {
         pointToLayer: function (feature, latlng) {
+            // Acceder correctamente a "Nombre de la institución"
             let nombreInstitucion = feature.properties["Nombre de la institución"];
-            if (!nombreInstitucion || nombreInstitucion === "null" || nombreInstitucion === null) {
+
+            // Verificar si es un valor válido (evitar valores 'None' o 'null' incorrectos)
+            if (!nombreInstitucion || nombreInstitucion === "null" || nombreInstitucion === null || nombreInstitucion === "None") {
                 nombreInstitucion = "No disponible";
             }
 
@@ -141,6 +144,7 @@ function cargarDatosMapa(datos) {
     });
 
     capaGeoJSON.addLayer(geojsonLayer);
+
 
 
 }
